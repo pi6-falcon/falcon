@@ -11,9 +11,4 @@ class FalconApplicationTests {
 	fun contextLoads() {
 	}
 
-	@Test
-	fun fail() {
-		"1" shouldBe "2"
-	}
-
 }
