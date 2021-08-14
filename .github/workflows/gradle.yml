@@ -24,4 +24,14 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew clean build
+    - name: Deploying to AWS
+      uses: einaregilsson/beanstalk-deploy@v17
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+        region: us-east-2
+        application_name: falcon
+        environment_name: Falcon-env
+        version_label: ${{github.SHA}}
+        deployment_package: target/falcon-1.0.jar
