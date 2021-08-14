@@ -34,4 +34,4 @@ jobs:
         application_name: falcon
         environment_name: Falcon-env
         version_label: ${{github.SHA}}
-        deployment_package: build/libs/falcon-1.0.jar
+        deployment_package: falcon-1.0.jar
