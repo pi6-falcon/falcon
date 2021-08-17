@@ -19,8 +19,8 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Run tests
-      run: ./gradlew test jacocoTestReport
-    - name: Generate JaCoCo badges
+      run: ./gradlew test
+    - name: Generate JaCoCo reports
       uses: cicirello/jacoco-badge-generator@v2
       with:
         jacoco-csv-file: build/reports/jacoco/test/jacocoTestReport.csv
