@@ -60,3 +60,14 @@ tasks.jacocoTestReport {
         csv.required.set(true)
     }
 }
+
+tasks.withType<JacocoReport> {
+    classDirectories.setFrom(
+        sourceSets.main.get().output.asFileTree.matching {
+            exclude(
+                "com/falcon/falcon/falcon/*.*",
+                "**/*log*.class"
+            )
+        }
+    )
+}
