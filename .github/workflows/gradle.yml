@@ -25,7 +25,12 @@ jobs:
       with:
         jacoco-csv-file: build/reports/jacoco/test/jacocoTestReport.csv
         on-missing-report: fail
+        badges-directory: .github/badges
+        generate-coverage-badge: true
+        coverage-badge-filename: jacoco.svg
         fail-if-coverage-less-than: 95
+        intervals: 100 95 90 80 70 0
+        colors: '#4c1 #97ca00 #a4a61d #dfb317 #fe7d37 #e05d44'
         
       
   build-and-deploy:
