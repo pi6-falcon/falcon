@@ -64,10 +64,18 @@ tasks.jacocoTestReport {
 tasks.withType<JacocoReport> {
     classDirectories.setFrom(
         sourceSets.main.get().output.asFileTree.matching {
-            exclude(
-                "com/falcon/falcon/falcon/*.*",
-                "**/*log*.class"
-            )
+            exclude("com/falcon/falcon/falcon/*.*")
+            exclude("**/*log*.class")
         }
     )
+}
+
+tasks.jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = "0.95".toBigDecimal()
+            }
+        }
+    }
 }
