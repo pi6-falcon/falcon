@@ -6,6 +6,7 @@ plugins {
     kotlin("jvm") version "1.5.21"
     kotlin("plugin.spring") version "1.5.21"
     jacoco
+    id("org.sonarqube") version "3.3"
 }
 
 group = "com.falcon"
@@ -77,5 +78,11 @@ tasks.jacocoTestCoverageVerification {
                 minimum = "0.95".toBigDecimal()
             }
         }
+    }
+}
+
+sonarqube {
+    properties {
+        property("sonar.sourceEncoding", "UTF-8")
     }
 }
