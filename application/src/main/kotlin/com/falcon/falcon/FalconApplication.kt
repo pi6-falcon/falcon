@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class FalconApplication
 
 fun main(args: Array<String>) {
-	runApplication<FalconApplication>(*args)
+    runApplication<FalconApplication>(*args)
 }
