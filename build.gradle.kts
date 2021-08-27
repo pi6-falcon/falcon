@@ -77,42 +77,44 @@ subprojects {
         withType<Test> {
             useJUnitPlatform()
         }
-
-        test {
-            finalizedBy(jacocoTestReport)
-        }
-
-        jacocoTestReport {
-            dependsOn(test)
-            reports {
-                xml.required.set(true)
-                csv.required.set(true)
-            }
-        }
-
-        withType<JacocoReport> {
-            classDirectories.setFrom(
-                sourceSets.main.get().output.asFileTree.matching {
-                    exclude("com/falcon/falcon/falcon/*.*")
-                    exclude("**/*log*.class")
-                }
-            )
-        }
-
-        jacocoTestCoverageVerification {
-            violationRules {
-                rule {
-                    limit {
-                        minimum = "0.95".toBigDecimal()
-                    }
-                }
-            }
-        }
     }
 }
 
 sonarqube {
     properties {
         property("sonar.sourceEncoding", "UTF-8")
+    }
+}
+
+tasks {
+    test {
+        finalizedBy(jacocoTestReport)
+    }
+
+    jacocoTestReport {
+        dependsOn(allprojects.map { it.tasks.named<Test>("test") })
+        reports {
+            xml.required.set(true)
+            csv.required.set(true)
+        }
+    }
+
+    withType<JacocoReport> {
+        classDirectories.setFrom(
+            sourceSets.main.get().output.asFileTree.matching {
+                exclude("com/falcon/falcon/falcon/*.*")
+                exclude("**/*log*.class")
+            }
+        )
+    }
+
+    jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                limit {
+                    minimum = "0.95".toBigDecimal()
+                }
+            }
+        }
     }
 }
