@@ -8,7 +8,11 @@ object UrlUtils {
 
     private const val DELIMITER = '-';
 
+    private const val ZERO = 0;
+
+    private const val SIX = 6;
+
     fun generate() = BaseEncoding.base64Url().encode(
-            UUID.randomUUID().toString().split(DELIMITER)[0].encodeToByteArray()).toString()
+            UUID.randomUUID().toString().split(DELIMITER)[ZERO].encodeToByteArray()).substring(ZERO, SIX)
 
 }
