@@ -35,6 +35,7 @@ dependencies {
     // Utils
     implementation("io.github.microutils:kotlin-logging:2.0.10")
     implementation("org.springframework.cloud:spring-cloud-sleuth:3.0.3")
+    implementation("com.google.guava:guava:18.0")
 }
 
 tasks.withType<KotlinCompile> {
