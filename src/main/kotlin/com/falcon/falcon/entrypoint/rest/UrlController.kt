@@ -1,17 +1,17 @@
 package com.falcon.falcon.entrypoint.rest
 
-import com.falcon.falcon.core.usecase.product.CreateProduct
+import com.falcon.falcon.core.usecase.url.ShortenUrlUseCase
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/product")
-class ProductController(private val createProductUseCase: CreateProduct) {
+@RequestMapping("/url")
+class UrlController(private val shortenUrlUseCase: ShortenUrlUseCase) {
 
     @PostMapping
-    fun createProduct(): String {
-        createProductUseCase.createProduct()
-        return "teste"
+    fun shortenUrl(): String {
+        shortenUrlUseCase.shortenUrl()
+        return "ok"
     }
 }
