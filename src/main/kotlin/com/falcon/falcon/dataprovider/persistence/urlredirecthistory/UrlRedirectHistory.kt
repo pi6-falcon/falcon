@@ -1,4 +1,4 @@
-package com.falcon.falcon.dataprovider.persistence.entity
+package com.falcon.falcon.dataprovider.persistence.urlredirecthistory
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey
@@ -10,7 +10,7 @@ data class UrlRedirectHistory(
     @DynamoDBHashKey(attributeName = "short_url")
     val shortUrl: String,
     @DynamoDBAttribute(attributeName = "from")
-    val from: String, // the ip address
+    val from: String,
     @DynamoDBAttribute(attributeName = "date")
-    val date: LocalDateTime, //
+    val date: LocalDateTime,
 )

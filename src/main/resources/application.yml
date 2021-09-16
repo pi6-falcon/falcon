@@ -1,11 +1,8 @@
 server:
   port: 5000
 
-
-envs:
-  aws:
-    dynamodb:
-      endpoint: ${ENDPOINT}
-      accesskey: ${ACCESS_KEY}
-      secretKey: ${SECRET_KEY}
+aws:
+  access_key_id: ${AWS_ACCESS_KEY_ID}
+  secret_key: ${AWS_SECRET_ACCESS_KEY}
+  endpoint: ${AWS_DYNAMO_ENDPOINT}
 

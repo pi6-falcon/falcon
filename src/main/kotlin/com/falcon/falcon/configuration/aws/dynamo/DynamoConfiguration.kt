@@ -8,27 +8,23 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
-
 @Configuration
 @EnableDynamoDBRepositories
-    (basePackages = arrayOf("com.falcon.falcon.dataprovider.persistence"))
+    (basePackages = ["com.falcon.falcon.dataprovider.persistence"])
 class DynamoConfiguration(
-    @Value("\${envs.aws.dynamodb.endpoint}")    private val ENDPOINT        : String,
-    @Value("\${envs.aws.dynamodb.accesskey}")   private val ACCESS_KEY      : String,
-    @Value("\${envs.aws.dynamodb.secretkey}")   private val SECRET_KEY      : String
+    @Value("\${aws.access_key_id}")
+    private var awsAccessKeyId: String,
+    @Value("\${aws.secret_key}")
+    private var awsSecretKey: String,
+    @Value("\${aws.endpoint}")
+    private var awsEndpoint: String,
 ) {
 
     @Bean
-    fun amazonDynamoDB() : AmazonDynamoDB {
-        val AWS_DYNAMODB = AmazonDynamoDBClient()
-
-        AWS_DYNAMODB.setEndpoint(ENDPOINT)
-
-        return AWS_DYNAMODB
+    fun amazonDynamoDB(): AmazonDynamoDB = AmazonDynamoDBClient().apply {
+        setEndpoint(awsEndpoint)
     }
 
-
     @Bean
-    fun amazonAWSCredentials() = BasicAWSCredentials(ACCESS_KEY, SECRET_KEY)
-
+    fun amazonAWSCredentials() = BasicAWSCredentials(awsAccessKeyId, awsSecretKey)
 }
