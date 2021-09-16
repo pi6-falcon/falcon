@@ -14,16 +14,8 @@ interface UrlDataProvider {
 }
 
 @Service
-class UrlDataProviderImpl(private val repository: UrlRepository) : UrlDataProvider {
+class UrlDataProviderImpl(private val repository: UrlRepository) {
 
     private val log = KotlinLogging.logger {}
-
-    override fun saveUrl() {
-        log.info { "saving url..." }
-    }
-
-    override fun updateUrl() {
-        log.info { "updating url..." }
-    }
 
 }

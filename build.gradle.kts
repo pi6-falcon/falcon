@@ -38,7 +38,8 @@ dependencies {
     implementation("io.github.microutils:kotlin-logging:2.0.10")
     implementation("org.springframework.cloud:spring-cloud-sleuth:3.0.3")
     // Storage
-    implementation("com.amazonaws:aws-java-sdk-dynamodb:1.12.68")
+    implementation("com.amazonaws:aws-java-sdk-dynamodb:1.11.64")
+    implementation("com.github.derjust:spring-data-dynamodb:5.1.0")
 }
 
 tasks.withType<KotlinCompile> {

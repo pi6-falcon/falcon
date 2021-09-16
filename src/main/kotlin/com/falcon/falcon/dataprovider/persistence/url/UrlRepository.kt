@@ -1,6 +1,7 @@
 package com.falcon.falcon.dataprovider.persistence.url
 
-import org.springframework.stereotype.Repository
+import org.socialsignin.spring.data.dynamodb.repository.EnableScan
+import org.springframework.data.repository.CrudRepository
 
-@Repository
+@EnableScan
 interface UrlRepository : CrudRepository<Url, String> {}
