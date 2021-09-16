@@ -40,6 +40,8 @@ dependencies {
     // Storage
     implementation("com.amazonaws:aws-java-sdk-dynamodb:1.11.64")
     implementation("com.github.derjust:spring-data-dynamodb:5.1.0")
+    // Swagger
+    implementation("org.springdoc:springdoc-openapi-ui:1.5.10")
 }
 
 tasks.withType<KotlinCompile> {

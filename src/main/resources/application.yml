@@ -6,3 +6,10 @@ aws:
   secret_key: ${AWS_SECRET_ACCESS_KEY}
   endpoint: ${AWS_DYNAMO_ENDPOINT}
 
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger.html
+    operationsSorter: method
+
