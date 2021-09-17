@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 
 interface CreteUser {
 
-    fun createUser(user: User)
+    fun createUser(user: User) : User
 }
 
 @Service

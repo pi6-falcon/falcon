@@ -6,7 +6,7 @@ import com.falcon.falcon.core.entity.User
 
 interface UserDataProvider {
 
-    fun saveUser(user: User)
+    fun saveUser(request: User) : User
 
 }
 
@@ -15,15 +15,20 @@ class UserDataProviderImpl(private val repository: UserRepository) : UserDataPro
 
     private val log = KotlinLogging.logger {}
 
-    override fun saveUser(user: User) {
+    override fun saveUser(request: User) : User {
         log.info { "Saving user in db..." }
 
-            repository.save(UserEntity(
-                username = user.username,
-                password = user.password
+            val user = repository.save(UserEntity(
+                username = request.username,
+                password = request.password
             ))
 
         log.info { "User was save in db..." }
+
+        return User(
+            username = user.username,
+            password = user.password
+        )
     }
 
 }
