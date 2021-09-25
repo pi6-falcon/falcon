@@ -3,13 +3,18 @@ package com.falcon.falcon.dataprovider.persistence.user
 import mu.KotlinLogging
 import org.springframework.stereotype.Service
 import com.falcon.falcon.core.entity.User
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import kotlin.jvm.Throws
+
 
 interface UserDataProvider {
 
     fun saveUser(request: User) : User
 
     fun getUser(request: User) : User
+
+    @Throws(UsernameNotFoundException::class)
+    fun getByUserName(userName: String) : User
 
 }
 
@@ -48,5 +53,20 @@ class UserDataProviderImpl(private val repository: UserRepository) : UserDataPro
             password = user.password
         )
     }
+
+    override fun getByUserName(userName: String): User {
+        log.info { "Get user by username in db..." }
+
+        val user = repository.findByUsername(userName)
+            ?: throw UsernameNotFoundException("Username doesn't exist")
+
+        log.info { "Got user by username in db..." }
+
+        return User(
+            username = user.username,
+            password = user.password
+        )
+    }
+
 
 }

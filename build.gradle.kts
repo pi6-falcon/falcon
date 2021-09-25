@@ -42,6 +42,9 @@ dependencies {
     implementation("com.github.derjust:spring-data-dynamodb:5.1.0")
     // Swagger
     implementation("org.springdoc:springdoc-openapi-ui:1.5.10")
+    // Security
+    implementation("org.springframework.boot:spring-boot-starter-security:2.5.4")
+    implementation("io.jsonwebtoken:jjwt:0.6.0")
 }
 
 tasks.withType<KotlinCompile> {

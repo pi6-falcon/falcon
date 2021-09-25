@@ -6,14 +6,14 @@ import mu.KotlinLogging
 import org.springframework.stereotype.Service
 import kotlin.RuntimeException
 
-interface CreteUser {
+interface CreateUser {
 
     fun createUser(user: User) : User
 
 }
 
 @Service
-class CreateUserUseCase(private val userDataProvider: UserDataProvider) : CreteUser {
+class CreateUserUseCase(private val userDataProvider: UserDataProvider) : CreateUser {
 
     private val log = KotlinLogging.logger {}
 

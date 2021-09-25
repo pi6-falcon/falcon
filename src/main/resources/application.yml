@@ -13,3 +13,11 @@ springdoc:
     path: /swagger.html
     operationsSorter: method
 
+spring:
+  security:
+    filter:
+      order: 1
+
+jwt:
+  secret: ${SECRET:secret}
+  expiration: ${JWT_EXPIRATION:60000}
