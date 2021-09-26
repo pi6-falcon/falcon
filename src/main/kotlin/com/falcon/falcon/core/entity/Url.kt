@@ -1,7 +1,10 @@
 package com.falcon.falcon.core.entity
 
+import com.falcon.falcon.core.enumeration.UrlType
+
 data class Url(
-    val shortUrl: String,
-    val longUrl: String,
-    val userIdentifier: String
+    var shortUrl: String = "",
+    val longUrl: String = "",
+    val userIdentifier: String = "",
+    val type: UrlType  = UrlType.RANDOM
 )
