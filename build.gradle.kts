@@ -25,7 +25,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.cloud:spring-cloud-starter-sleuth:3.0.3")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
     // Cache
     implementation("com.github.ben-manes.caffeine:caffeine:3.0.3")
     // Utils + Kotlin
@@ -33,6 +32,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.21")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.5")
+    implementation("commons-validator:commons-validator:1.7")
     // Storage
     implementation("com.github.derjust:spring-data-dynamodb:5.1.0")
     // Swagger

@@ -5,4 +5,6 @@ import org.springframework.data.repository.CrudRepository
 
 @EnableScan
 interface UrlRepository : CrudRepository<UrlEntity, String> {
+
+    fun findByShortUrl(shortUrl: String): UrlEntity?
 }

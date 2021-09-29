@@ -1,7 +1,7 @@
 package com.falcon.falcon.core.exception.resolver
 
 import com.falcon.falcon.core.exception.ShortUrlAlreadyExistsException
-import com.falcon.falcon.entrypoint.rest.exception.resolver.ErrorResponse
+import com.falcon.falcon.core.exception.UrlNotFoundException
 import java.time.LocalDateTime
 import mu.KotlinLogging
 import org.springframework.core.Ordered
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 
 @ControllerAdvice
-//@ControllerAdvice(basePackages = ["com.falcon.falcon.core.exception"])
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
 class CoreExceptionResolver {
 
@@ -23,7 +22,15 @@ class CoreExceptionResolver {
         log.error { e.message }
         return ResponseEntity
             .status(HttpStatus.CONFLICT)
-            .body(ErrorResponse(LocalDateTime.now(), HttpStatus.CONFLICT.value(), arrayListOf(), e.message ?: "Temporary service error"))
+            .body(ErrorResponse(LocalDateTime.now(), HttpStatus.CONFLICT.value(), arrayListOf(), e.message))
+    }
+
+    @ExceptionHandler(UrlNotFoundException::class)
+    fun resolveUrlNotFoundException(e: UrlNotFoundException): ResponseEntity<ErrorResponse> {
+        log.error { e.message }
+        return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
+            .body(ErrorResponse(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), arrayListOf(), e.message))
     }
 }
 
@@ -33,3 +40,4 @@ data class ErrorResponse(
     val errors: List<String>,
     val message: String,
 )
+

@@ -1,7 +1,7 @@
 package com.falcon.falcon.common.exception.resolver
 
-import com.falcon.falcon.entrypoint.rest.exception.resolver.ErrorResponse
 import java.time.LocalDateTime
+import javax.validation.ConstraintViolationException
 import mu.KotlinLogging
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
@@ -35,6 +35,17 @@ class GlobalExceptionResolver {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body(ErrorResponse(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), arrayListOf("invalid_input"), "input is invalid"))
+    }
+
+    @ExceptionHandler(ConstraintViolationException::class)
+    fun resolveConstraintViolationException(e: ConstraintViolationException): ResponseEntity<ErrorResponse> {
+        val errors = arrayListOf<String>()
+        for (i in e.constraintViolations) {
+            errors.add(i.message)
+        }
+        val response = ErrorResponse(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), errors, "invalid input")
+        log.error { errors }
+        return ResponseEntity(response, HttpStatus.BAD_REQUEST)
     }
 }
 
