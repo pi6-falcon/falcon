@@ -1,33 +1,28 @@
 package com.falcon.falcon.core.usecase.user
 
 import com.falcon.falcon.core.entity.User
+import com.falcon.falcon.core.usecase.exception.user.UserNotFoundException
 import com.falcon.falcon.dataprovider.persistence.user.UserDataProvider
 import mu.KotlinLogging
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import kotlin.RuntimeException
+import kotlin.jvm.Throws
 
 interface CreateUser {
 
+    @Throws(UserNotFoundException::class)
     fun createUser(user: User) : User
-
 }
 
 @Service
 class CreateUserUseCase(private val userDataProvider: UserDataProvider) : CreateUser {
 
-    private val log = KotlinLogging.logger {}
-
-    override fun createUser(user: User) : User = checkIfExistUser(user).let {
-        if(!it) userDataProvider.saveUser(user) else throw RuntimeException("User already exist")
+    @Throws(UserNotFoundException::class)
+    override fun createUser(user: User) : User = userDataProvider.getUser(user).let {
+        if (it != null)
+            userDataProvider.saveUser(user)
+        else
+            throw UserNotFoundException()
     }
-
-    private fun checkIfExistUser(user: User) : Boolean {
-        return  try {
-            userDataProvider.getUser(user)
-            true
-        } catch (ex: Exception) {
-            false
-        }
-    }
-
 }

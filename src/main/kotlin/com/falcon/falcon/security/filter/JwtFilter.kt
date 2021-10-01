@@ -1,6 +1,5 @@
 package com.falcon.falcon.security.filter
 
-import com.falcon.falcon.constants.Header
 import com.falcon.falcon.core.usecase.user.FindByUserNameUseCases
 import com.falcon.falcon.security.utils.JwtUtils
 import mu.KotlinLogging
@@ -18,7 +17,8 @@ import org.springframework.security.core.context.SecurityContextHolder
 @Component
 class JwtFilter(
     private val jwtUtils: JwtUtils,
-    private val findByUserNameUseCases: FindByUserNameUseCases): OncePerRequestFilter() {
+    private val findByUserNameUseCases: FindByUserNameUseCases
+) : OncePerRequestFilter() {
 
     private val log = KotlinLogging.logger {}
 
@@ -30,35 +30,23 @@ class JwtFilter(
 
         log.info { "Jwt filter took the request..." }
 
-        val header = request.getHeader(AUTHORIZATION)
+        request.getHeader(AUTHORIZATION)?.let { header ->
+            log.info { "Analyzing if exist a token and if it is valid" }
 
+            if (isJwtExist(header) && jwtUtils.isTokenValid(header.split(" ")[1].trim())) {
 
-        log.info { "Analyzing if exist a token" }
+                val token = header.split(" ")[1].trim();
 
-        if(header == null || verifyIfNotExistJwt(header)) {
+                log.info { "Tokes is valid" }
 
-            log.info { "Token not found" }
+                jwtUtils.getUserName(token)?.let {
+                    val user = findByUserNameUseCases.loadUserByUsername(it)
 
-            filterChain.doFilter(request, response)
-            return
-        }
-
-        log.info { "Token found" }
-
-        val token = header.split(" ")[1].trim();
-
-        log.info { "Analyzing if token is valid" }
-
-        if (jwtUtils.isTokenValid(token)) {
-
-            log.info { "Tokes is valid" }
-
-            jwtUtils.getUserName(token)?.let {
-                val user = findByUserNameUseCases.loadUserByUsername(it)
-
-                SecurityContextHolder.getContext().authentication =
-                    UsernamePasswordAuthenticationToken(user, null, user.authorities)
+                    SecurityContextHolder.getContext().authentication =
+                        UsernamePasswordAuthenticationToken(user, null, user.authorities)
+                }
             }
+
         }
 
         log.info { "exit of the jwt filter" }
@@ -67,6 +55,6 @@ class JwtFilter(
 
     }
 
-    private fun verifyIfNotExistJwt(header: String): Boolean =
-        StringUtils.isEmpty(header) || !header.startsWith(Header.BEARER.type)
+    private fun isJwtExist(header: String): Boolean =
+        StringUtils.isEmpty(header) || !header.startsWith("Bearer")
 }

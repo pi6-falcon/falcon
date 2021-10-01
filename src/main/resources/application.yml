@@ -19,5 +19,5 @@ spring:
       order: 1
 
 jwt:
-  secret: ${SECRET:secret}
-  expiration: ${JWT_EXPIRATION:60000}
+  secret: ${SECRET}
+  expiration: ${JWT_EXPIRATION}

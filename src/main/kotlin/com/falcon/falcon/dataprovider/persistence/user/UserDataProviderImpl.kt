@@ -1,72 +1,45 @@
 package com.falcon.falcon.dataprovider.persistence.user
 
-import mu.KotlinLogging
-import org.springframework.stereotype.Service
 import com.falcon.falcon.core.entity.User
-import org.springframework.security.core.userdetails.UsernameNotFoundException
-import kotlin.jvm.Throws
-
+import org.springframework.stereotype.Service
 
 interface UserDataProvider {
 
-    fun saveUser(request: User) : User
+    fun saveUser(request: User): User
 
-    fun getUser(request: User) : User
+    fun getUser(request: User): User?
 
-    @Throws(UsernameNotFoundException::class)
-    fun getByUserName(userName: String) : User
+    fun getByUserName(userName: String): User?
 
 }
 
 @Service
 class UserDataProviderImpl(private val repository: UserRepository) : UserDataProvider {
 
-    private val log = KotlinLogging.logger {}
-
-    override fun saveUser(request: User) : User {
-        log.info { "Saving user in db..." }
-
-            val user = repository.save(UserEntity(
-                username = request.username,
-                password = request.password
-            ))
-
-        log.info { "User was save in db..." }
-
-        return User(
-            username = user.username,
-            password = user.password
+    override fun saveUser(request: User): User = repository.save(
+        UserEntity(
+            username = request.username,
+            password = request.password
         )
-    }
-
-    override fun getUser(request: User): User {
-
-        log.info { "Get user in db..." }
-
-        val user = repository.findByUsername(request.username)
-            ?: throw RuntimeException("Username doesn't exist")
-
-        log.info { "Got user in db..." }
-
-        return User(
-            username = user.username,
-            password = user.password
-        )
-    }
-
-    override fun getByUserName(userName: String): User {
-        log.info { "Get user by username in db..." }
-
-        val user = repository.findByUsername(userName)
-            ?: throw UsernameNotFoundException("Username doesn't exist")
-
-        log.info { "Got user by username in db..." }
-
-        return User(
-            username = user.username,
-            password = user.password
+    ).let {
+        User(
+            username = it.username,
+            password = it.password
         )
     }
 
 
+    override fun getUser(request: User): User? = repository.findByUsername(request.username)?.let {
+        User(
+            username = it.username,
+            password = it.password
+        )
+    }
+
+    override fun getByUserName(userName: String): User? = repository.findByUsername(userName)?.let {
+        User(
+            username = it.username,
+            password = it.password
+        )
+    }
 }

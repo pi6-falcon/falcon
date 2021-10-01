@@ -9,14 +9,11 @@ import org.springframework.stereotype.Service
 
 import kotlin.jvm.Throws
 
-interface FindByUserName : UserDetailsService {
-
-}
-
 @Service
-class FindByUserNameUseCases(private val userDataProvider: UserDataProvider) : FindByUserName {
+class FindByUserNameUseCases(private val userDataProvider: UserDataProvider) : UserDetailsService {
 
     @Throws(UsernameNotFoundException::class)
-    override fun loadUserByUsername(username: String) = UserDetailsImpl(userDataProvider.getByUserName(username))
-
+    override fun loadUserByUsername(username: String) = UserDetailsImpl(
+        userDataProvider.getByUserName(username) ?: throw UsernameNotFoundException("username not found")
+    )
 }

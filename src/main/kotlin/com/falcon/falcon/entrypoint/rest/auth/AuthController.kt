@@ -17,14 +17,14 @@ class AuthController(
 
    @PostMapping
    fun authUser(@RequestBody @Valid request: AuthRequest): ResponseEntity<AuthResponse> =
-        ResponseEntity(authUseCase.validateUser(request.toUser()).toAuth(jwtUtils), HttpStatus.OK)
+        ResponseEntity(authUseCase.validateUser(request.toDomain()).toResponse(jwtUtils), HttpStatus.OK)
 
 }
 
-private fun AuthRequest.toUser() = User(
+private fun AuthRequest.toDomain() = User(
     username = this.username,
     password = this.password
     )
 
-private fun User.toAuth(jwtUtils: JwtUtils) =
+private fun User.toResponse(jwtUtils: JwtUtils) =
     AuthResponse (token = jwtUtils.generateToken(this.username))

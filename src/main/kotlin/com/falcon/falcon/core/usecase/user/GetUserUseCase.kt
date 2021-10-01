@@ -1,20 +1,20 @@
 package com.falcon.falcon.core.usecase.user
 
 import com.falcon.falcon.core.entity.User
+import com.falcon.falcon.core.usecase.exception.user.UserNotFoundException
 import com.falcon.falcon.dataprovider.persistence.user.UserDataProvider
-import mu.KotlinLogging
 import org.springframework.stereotype.Service
+import kotlin.jvm.Throws
 
 interface GetUser {
 
-    fun getUser(user: User) : User
+    @Throws(UserNotFoundException::class)
+    fun getUser(user: User): User
 }
 
 @Service
 class GetUserUseCase(private val userDataProvider: UserDataProvider) : GetUser {
 
-    private val log = KotlinLogging.logger {}
-
-    override fun getUser(user: User) = userDataProvider.getUser(user)
-
+    @Throws(UserNotFoundException::class)
+    override fun getUser(user: User) = userDataProvider.getUser(user) ?: throw UserNotFoundException()
 }
