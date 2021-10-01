@@ -1,15 +1,12 @@
 package com.falcon.falcon.dataprovider.persistence.user
 
 import com.falcon.falcon.core.entity.User
-import com.falcon.falcon.dataprovider.persistence.user.UserEntity;
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.mockk
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)

@@ -3,10 +3,7 @@ package com.falcon.falcon.core.usecase.user
 import com.falcon.falcon.core.entity.User
 import com.falcon.falcon.core.usecase.exception.user.UserNotFoundException
 import com.falcon.falcon.dataprovider.persistence.user.UserDataProvider
-import mu.KotlinLogging
-import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
-import kotlin.RuntimeException
 import kotlin.jvm.Throws
 
 interface CreateUser {

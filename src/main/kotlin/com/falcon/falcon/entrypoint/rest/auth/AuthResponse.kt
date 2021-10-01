@@ -1,6 +1,5 @@
 package com.falcon.falcon.entrypoint.rest.auth
 
-import java.sql.Time
 import java.time.Instant
 
 data class AuthResponse(
