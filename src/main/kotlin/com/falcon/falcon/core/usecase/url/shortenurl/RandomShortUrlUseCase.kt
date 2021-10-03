@@ -17,17 +17,18 @@ class RandomShortUrlUseCase(private val urlDataProvider: UrlDataProvider) : Shor
 
     private val log = KotlinLogging.logger {}
 
+    // TODO: Should populate user identifier and do some validations. Maybe limit the loop to specific number and return exception
     override fun shorten(@Valid request: Url): Url {
         var shortUrl: String
         do {
-            shortUrl = generateShortUrl(request.longUrl)
+            shortUrl = generateShortUrl()
         } while (urlDataProvider.urlAlreadyExists(shortUrl))
 
         request.shortUrl = shortUrl
         return urlDataProvider.save(request)
     }
 
-    fun generateShortUrl(longUrl: String): String =
+    fun generateShortUrl(): String =
         Base64.getUrlEncoder().encodeToString(
             UUID.randomUUID().toString().toByteArray()
         ).substring(0, 6)

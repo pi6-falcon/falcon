@@ -69,12 +69,18 @@ tasks.jacocoTestReport {
 }
 
 tasks.withType<JacocoReport> {
-    classDirectories.setFrom(
-        sourceSets.main.get().output.asFileTree.matching {
-            exclude("com/falcon/falcon/falcon/FalconApplication.*")
-            exclude("**/*log*.class")
-        }
-    )
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.map {
+            fileTree(it).apply {
+                // Main class
+                exclude("com/falcon/falcon/falcon/FalconApplication.*")
+                // Configuration classes
+                exclude("com/falcon/falcon/falcon/configuration/aws/dynamo/DynamoConfiguration.*")
+                // Log class (Kotlin compatibility)
+                exclude("**/*log*.class")
+            }
+        }))
+    }
 }
 
 tasks.jacocoTestCoverageVerification {
@@ -86,7 +92,6 @@ tasks.jacocoTestCoverageVerification {
         }
     }
 }
-
 // Removes the falcon-1.0-plain.jar file on the build/libs
 tasks.getByName<Jar>("jar") {
     enabled = false

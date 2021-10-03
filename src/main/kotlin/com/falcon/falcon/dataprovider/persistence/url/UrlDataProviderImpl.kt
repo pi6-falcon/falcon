@@ -18,26 +18,26 @@ class UrlDataProviderImpl(private val repository: UrlRepository) : UrlDataProvid
     private val log = KotlinLogging.logger {}
 
     override fun save(request: Url) =
-        repository.save(request.toEntity()).toUrl()
+        repository.save(request.toDatabaseEntity()).toCoreEntity()
 
     override fun urlAlreadyExists(shortUrl: String): Boolean =
         repository.existsById(shortUrl)
 
     override fun delete(request: Url) =
-        repository.delete(request.toEntity())
+        repository.delete(request.toDatabaseEntity())
 
     override fun getByShortUrl(shortUrl: String): Url? =
-        repository.findByShortUrl(shortUrl)?.toUrl()
+        repository.findByShortUrl(shortUrl)?.toCoreEntity()
 }
 
-private fun Url.toEntity(): UrlEntity =
+private fun Url.toDatabaseEntity(): UrlEntity =
     UrlEntity(
         shortUrl = this.shortUrl,
         longUrl = this.longUrl,
         userIdentifier = this.userIdentifier
     )
 
-private fun UrlEntity.toUrl(): Url =
+private fun UrlEntity.toCoreEntity(): Url =
     Url(
         shortUrl = this.shortUrl,
         longUrl = this.longUrl,
