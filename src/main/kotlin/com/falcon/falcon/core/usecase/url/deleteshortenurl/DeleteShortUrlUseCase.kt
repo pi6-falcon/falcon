@@ -10,6 +10,7 @@ class DeleteShortUrlUseCase(private val urlDataProvider: UrlDataProvider) : Dele
 
     private val log = KotlinLogging.logger {}
 
+    // TODO: add validation if the user on the context is owner of the URL.
     override fun delete(request: String): Unit =
         urlDataProvider.getByShortUrl(request)?.let {
             return urlDataProvider.delete(it)

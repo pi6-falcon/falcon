@@ -33,7 +33,7 @@ class UrlController(
         ResponseEntity(customShortUrlUseCase.shorten(request.toDomain()).toResponse(), HttpStatus.CREATED)
 
     @DeleteMapping("/{shortenUrl}")
-    fun deleteShortenedUrl(@Valid @PathVariable("shortenUrl") request: String): ResponseEntity<Void> =
+    fun deleteShortenedLongUrl(@Valid @PathVariable("shortenUrl") request: String): ResponseEntity<Void> =
         deleteShortenedUrlUseCase.delete(request).run {
             ResponseEntity(HttpStatus.NO_CONTENT)
         }

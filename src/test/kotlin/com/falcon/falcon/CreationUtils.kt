@@ -7,10 +7,10 @@ import com.falcon.falcon.entrypoint.rest.url.ShortenUrlResponse
 class CreationUtils {
     companion object {
 
-        fun buildRandomShortenUrlRequest(longUrl: String = "this-is-a-dummy-long-url"): RandomShortenUrlRequest =
+        fun buildRandomShortenUrlRequest(longUrl: String? = "this-is-a-dummy-long-url"): RandomShortenUrlRequest =
             RandomShortenUrlRequest(longUrl = longUrl)
 
-        fun buildCustomShortenUrlRequest(longUrl: String = "this-is-a-dummy-long-url", customUrl: String = "this-is-a-dummy-custom-url"): CustomShortenUrlRequest =
+        fun buildCustomShortenUrlRequest(longUrl: String? = "this-is-a-dummy-long-url", customUrl: String? = "this-is-a-dummy-custom-url"): CustomShortenUrlRequest =
             CustomShortenUrlRequest(longUrl = longUrl, customUrl = customUrl)
 
         fun buildShortenUrlResponse(shortUrl: String = "this-is-a-dummy-short-url"): ShortenUrlResponse =
