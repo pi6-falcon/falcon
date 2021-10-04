@@ -21,3 +21,10 @@ springdoc:
 spring:
   jackson:
     property-naming-strategy: SNAKE_CASE
+  security:
+    filter:
+      order: 1
+
+jwt:
+  secret: ${SECRET}
+  expiration: ${JWT_EXPIRATION}

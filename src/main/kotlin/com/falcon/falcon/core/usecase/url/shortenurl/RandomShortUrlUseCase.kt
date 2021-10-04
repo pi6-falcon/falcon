@@ -13,12 +13,12 @@ import org.springframework.validation.annotation.Validated
 @Service
 @Validated
 @Qualifier("randomShortUrlUseCase")
-class RandomShortUrlUseCase(private val urlDataProvider: UrlDataProvider) : ShortenUrl {
+class RandomShortUrlUseCase(private val urlDataProvider: UrlDataProvider) : UrlShortener {
 
     private val log = KotlinLogging.logger {}
 
     // TODO: Should populate user identifier and do some validations. Maybe limit the loop to specific number and return exception
-    override fun shorten(@Valid request: Url): Url {
+    override fun execute(@Valid request: Url): Url {
         var shortUrl: String
         do {
             shortUrl = generateShortUrl()

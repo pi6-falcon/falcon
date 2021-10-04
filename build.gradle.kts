@@ -9,6 +9,10 @@ plugins {
     jacoco
 }
 
+jacoco {
+    toolVersion = "0.8.7"
+}
+
 group = "com.falcon"
 version = "2.0"
 java.sourceCompatibility = JavaVersion.VERSION_11
@@ -23,7 +27,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-cache")
-    implementation("org.springframework.cloud:spring-cloud-starter-sleuth:3.0.3")
+    implementation("org.springframework.boot:spring-boot-starter-security")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     // Cache
     implementation("com.github.ben-manes.caffeine:caffeine:3.0.3")
@@ -33,6 +37,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.5")
     implementation("commons-validator:commons-validator:1.7")
+    implementation("org.springframework.cloud:spring-cloud-starter-sleuth:3.0.3")
     // Storage
     implementation("com.github.derjust:spring-data-dynamodb:5.1.0")
     // Swagger
@@ -43,6 +48,8 @@ dependencies {
     testImplementation("io.mockk:mockk:1.12.0")
     testImplementation("uk.org.webcompere:system-stubs-core:1.2.0")
     testImplementation("uk.org.webcompere:system-stubs-jupiter:1.2.0")
+    // Security
+    implementation("io.jsonwebtoken:jjwt:0.9.1")
 }
 
 tasks.withType<KotlinCompile> {
@@ -73,7 +80,7 @@ tasks.withType<JacocoReport> {
         classDirectories.setFrom(files(classDirectories.files.map {
             fileTree(it).apply {
                 // Main class
-                exclude("com/falcon/falcon/falcon/FalconApplication.*")
+                exclude("com/falcon/falcon/falcon/*.*")
                 // Configuration classes
                 exclude("com/falcon/falcon/falcon/configuration/aws/dynamo/DynamoConfiguration.*")
                 // Log class (Kotlin compatibility)

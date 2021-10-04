@@ -2,7 +2,7 @@ package com.falcon.falcon.entrypoint.rest.url
 
 import com.falcon.falcon.core.entity.Url
 import com.falcon.falcon.core.usecase.url.deleteshortenurl.DeleteShortenedUrl
-import com.falcon.falcon.core.usecase.url.shortenurl.ShortenUrl
+import com.falcon.falcon.core.usecase.url.shortenurl.UrlShortener
 import javax.validation.Valid
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpStatus
@@ -18,23 +18,23 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/url")
 class UrlController(
     @Qualifier("randomShortUrlUseCase")
-    private val randomShortUrlUseCase: ShortenUrl,
+    private val randomShortUrlUseCase: UrlShortener,
     @Qualifier("customShortUrlUseCase")
-    private val customShortUrlUseCase: ShortenUrl,
+    private val customShortUrlUseCase: UrlShortener,
     private val deleteShortenedUrlUseCase: DeleteShortenedUrl,
 ) {
 
     @PostMapping
     fun shortenToRandomUrl(@Valid @RequestBody request: RandomShortenUrlRequest): ResponseEntity<ShortenUrlResponse> =
-        ResponseEntity(randomShortUrlUseCase.shorten(request.toDomain()).toResponse(), HttpStatus.CREATED)
+        ResponseEntity(randomShortUrlUseCase.execute(request.toDomain()).toResponse(), HttpStatus.CREATED)
 
     @PostMapping("/custom")
     fun shortenToCustomUrl(@Valid @RequestBody request: CustomShortenUrlRequest): ResponseEntity<ShortenUrlResponse> =
-        ResponseEntity(customShortUrlUseCase.shorten(request.toDomain()).toResponse(), HttpStatus.CREATED)
+        ResponseEntity(customShortUrlUseCase.execute(request.toDomain()).toResponse(), HttpStatus.CREATED)
 
     @DeleteMapping("/{shortenUrl}")
     fun deleteShortenedLongUrl(@Valid @PathVariable("shortenUrl") request: String): ResponseEntity<Void> =
-        deleteShortenedUrlUseCase.delete(request).run {
+        deleteShortenedUrlUseCase.execute(request).run {
             ResponseEntity(HttpStatus.NO_CONTENT)
         }
 }

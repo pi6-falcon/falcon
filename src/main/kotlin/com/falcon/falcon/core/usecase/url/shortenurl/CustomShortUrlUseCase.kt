@@ -12,11 +12,11 @@ import org.springframework.validation.annotation.Validated
 @Service
 @Validated
 @Qualifier("customShortUrlUseCase")
-class CustomShortUrlUseCase(private val urlDataProvider: UrlDataProvider) : ShortenUrl {
+class CustomShortUrlUseCase(private val urlDataProvider: UrlDataProvider) : UrlShortener {
 
     private val log = KotlinLogging.logger {}
 
-    override fun shorten(@Valid request: Url): Url {
+    override fun execute(@Valid request: Url): Url {
         if (urlDataProvider.urlAlreadyExists(request.shortUrl)) {
             log.error { "A identifier with the custom URL ${request.shortUrl} already exists." }
             throw ShortUrlAlreadyExistsException()

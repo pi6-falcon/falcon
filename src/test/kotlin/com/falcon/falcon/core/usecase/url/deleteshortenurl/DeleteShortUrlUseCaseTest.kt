@@ -41,7 +41,7 @@ class DeleteShortUrlUseCaseTest {
             every { urlDataProvider.getByShortUrl(shortUrl) } returns response
             justRun { urlDataProvider.delete(response) }
             // When
-            val result = useCase.delete(shortUrl)
+            val result = useCase.execute(shortUrl)
             // Then
             verify(exactly = 1) {
                 urlDataProvider.getByShortUrl(shortUrl)
@@ -57,7 +57,7 @@ class DeleteShortUrlUseCaseTest {
             every { urlDataProvider.getByShortUrl(shortUrl) } returns null
             // When-Then
             shouldThrowExactly<UrlNotFoundException> {
-                useCase.delete(shortUrl)
+                useCase.execute(shortUrl)
             }
         }
     }

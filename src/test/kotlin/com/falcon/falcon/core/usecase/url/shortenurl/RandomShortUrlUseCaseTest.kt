@@ -40,7 +40,7 @@ class RandomShortUrlUseCaseTest {
             every { urlDataProvider.save(expectedRequest) } returns expectedRequest
             every { useCase.generateShortUrl() } returns generatedShortUrl
             // When
-            val result = useCase.shorten(request)
+            val result = useCase.execute(request)
             // Then
             verify(exactly = 1) {
                 useCase.generateShortUrl()
@@ -61,7 +61,7 @@ class RandomShortUrlUseCaseTest {
             every { urlDataProvider.urlAlreadyExists(generatedShortUrl) } returns true andThen false
             every { urlDataProvider.save(expectedRequest) } returns expectedRequest
             // When
-            val result = useCase.shorten(request)
+            val result = useCase.execute(request)
             // Then
             verify(exactly = 2) {
                 useCase.generateShortUrl()

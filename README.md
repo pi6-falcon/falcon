@@ -31,6 +31,8 @@ Make sure you have Java SDK 11 installed. Then, you need to set some environment
 export AWS_ACCESS_KEY_ID=<aws-access-key>
 export AWS_SECRET_ACCESS_KEY=<aws-secret-key>
 export AWS_DYNAMO_ENDPOINT=<aws-dynamo-endpoint>
+export SECRET=<jwt-secret>
+export JWT_EXPIRATION=<jwt-expiration>
 ```
 
 And then you can run the program by running:

@@ -6,10 +6,10 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
 
 data class CustomShortenUrlRequest(
-    @field:NotBlank(message = "long_url should be sent")
+    @field:NotBlank(message = "long_url must be sent")
     val longUrl: String?,
     @field:NotBlank(message = "custom_url must be sent")
-    @field:Size(min = 3, max = 20, message = "custom_url should be between 3 and 20 characters")
+    @field:Size(min = 3, max = 20, message = "custom_url must be between 3 and 20 characters")
     val customUrl: String?,
 )
 

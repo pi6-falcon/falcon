@@ -19,7 +19,7 @@ import org.junit.jupiter.api.TestInstance
 class CustomShortUrlUseCaseTest {
 
     private val urlDataProvider: UrlDataProvider = mockk()
-    private val useCase: ShortenUrl = CustomShortUrlUseCase(urlDataProvider)
+    private val useCase: UrlShortener = CustomShortUrlUseCase(urlDataProvider)
 
     @BeforeEach
     fun init() {
@@ -39,7 +39,7 @@ class CustomShortUrlUseCaseTest {
             every { urlDataProvider.urlAlreadyExists(customUrl) } returns false
             every { urlDataProvider.save(expectedRequest) } returns expectedRequest
             // When
-            val result = useCase.shorten(request)
+            val result = useCase.execute(request)
             // Then
             verify(exactly = 1) {
                 urlDataProvider.urlAlreadyExists(customUrl)
@@ -58,7 +58,7 @@ class CustomShortUrlUseCaseTest {
             every { urlDataProvider.urlAlreadyExists(customUrl) } returns true
             // When-Then
             shouldThrowExactly<ShortUrlAlreadyExistsException> {
-                useCase.shorten(request)
+                useCase.execute(request)
             }
         }
     }

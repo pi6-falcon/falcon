@@ -5,7 +5,7 @@ import com.falcon.falcon.core.enumeration.UrlType
 import javax.validation.constraints.NotBlank
 
 data class RandomShortenUrlRequest(
-    @field:NotBlank(message = "long_url should be sent")
+    @field:NotBlank(message = "long_url must be sent")
     val longUrl: String?
 )
 

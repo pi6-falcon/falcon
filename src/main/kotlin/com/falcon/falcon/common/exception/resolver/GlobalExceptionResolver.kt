@@ -12,6 +12,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 
+/**
+ * This class is used to handle exceptions that are not part of our domain.
+ * It has Ordered.LOWEST_PRECEDENCE as we have other handlers that should be scanned primarily.
+ */
 @ControllerAdvice
 @Order(value = Ordered.LOWEST_PRECEDENCE)
 class GlobalExceptionResolver {
