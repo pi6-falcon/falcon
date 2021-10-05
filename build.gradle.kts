@@ -106,11 +106,6 @@ tasks.getByName<Jar>("jar") {
     enabled = false
 }
 
-// Rename jar to be always falcon.jar
-tasks.bootJar {
-    archiveFileName.set("falcon.jar")
-}
-
 sonarqube {
     properties {
         property("sonar.projectKey", "pi6-falcon_falcon")
