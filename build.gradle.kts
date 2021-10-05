@@ -14,7 +14,7 @@ jacoco {
 }
 
 group = "com.falcon"
-version = "2.0"
+version = "2.0-dev-test"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
