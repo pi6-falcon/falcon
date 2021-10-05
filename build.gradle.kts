@@ -108,6 +108,8 @@ tasks.getByName<Jar>("jar") {
 
 sonarqube {
     properties {
-        property("sonar.sourceEncoding", "UTF-8")
+        property("sonar.projectKey", "pi6-falcon_falcon")
+        property("sonar.organization", "pi6-falcon")
+        property("sonar.host.url", "https://sonarcloud.io")
     }
 }
