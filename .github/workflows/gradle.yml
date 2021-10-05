@@ -52,7 +52,7 @@ jobs:
         uses: einaregilsson/beanstalk-deploy@v17
         env:
           FALCON_VERSION: |
-          echo $(basename build/libs/*.jar .jar)
+          echo "$(basename build/libs/*.jar .jar)"
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
