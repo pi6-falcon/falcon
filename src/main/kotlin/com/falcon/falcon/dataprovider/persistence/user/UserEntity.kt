@@ -5,9 +5,9 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable
 
 @DynamoDBTable(tableName = "user")
-data class User(
+data class UserEntity(
     @DynamoDBHashKey(attributeName = "username")
-    val username: String,
+    var username: String = "",
     @DynamoDBAttribute(attributeName = "password")
-    val password: String,
+    var password: String = "",
 )
