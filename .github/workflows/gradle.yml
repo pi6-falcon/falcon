@@ -48,11 +48,10 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew clean build -x test
+      - name: Generating Aplication Version
+        run: echo "FALCON_VERSION:$(basename build/libs/*.jar .jar)" >> $GITHUB_ENV
       - name: Deploying to AWS
         uses: einaregilsson/beanstalk-deploy@v17
-        env:
-          FALCON_VERSION: |
-          echo "$(basename build/libs/*.jar .jar)"
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
