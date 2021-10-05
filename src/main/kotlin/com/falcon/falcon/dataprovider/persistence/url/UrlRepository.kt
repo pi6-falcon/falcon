@@ -4,4 +4,7 @@ import org.socialsignin.spring.data.dynamodb.repository.EnableScan
 import org.springframework.data.repository.CrudRepository
 
 @EnableScan
-interface UrlRepository : CrudRepository<Url, String> {}
+interface UrlRepository : CrudRepository<UrlEntity, String> {
+
+    fun findByShortUrl(shortUrl: String): UrlEntity?
+}

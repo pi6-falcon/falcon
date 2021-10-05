@@ -9,8 +9,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-@EnableDynamoDBRepositories
-    (basePackages = ["com.falcon.falcon.dataprovider.persistence"])
+@EnableDynamoDBRepositories(basePackages = ["com.falcon.falcon.dataprovider.persistence"])
 class DynamoConfiguration(
     @Value("\${aws.access_key_id}")
     private var awsAccessKeyId: String,

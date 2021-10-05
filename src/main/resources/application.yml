@@ -1,8 +1,30 @@
 server:
-  port: 5000
+  port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-exception: false
+    include-stacktrace: on_param
 
 aws:
   access_key_id: ${AWS_ACCESS_KEY_ID}
   secret_key: ${AWS_SECRET_ACCESS_KEY}
   endpoint: ${AWS_DYNAMO_ENDPOINT}
 
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger.html
+    operationsSorter: method
+
+spring:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  security:
+    filter:
+      order: 1
+
+jwt:
+  secret: ${SECRET}
+  expiration: ${JWT_EXPIRATION}
