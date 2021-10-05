@@ -101,9 +101,14 @@ tasks.jacocoTestCoverageVerification {
         }
     }
 }
-// Removes the falcon-1.0-plain.jar file on the build/libs
+// Removes the **-plain.jar file on the build/libs
 tasks.getByName<Jar>("jar") {
     enabled = false
+}
+
+// Rename jar to be always falcon.jar
+tasks.bootJar {
+    archiveFileName.set("falcon.jar")
 }
 
 sonarqube {
