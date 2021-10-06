@@ -2,6 +2,7 @@ package com.falcon.falcon.core.exception.resolver
 
 import com.falcon.falcon.core.exception.ShortUrlAlreadyExistsException
 import com.falcon.falcon.core.exception.UrlNotFoundException
+import com.falcon.falcon.core.exception.UserAlreadyFoundException
 import java.time.LocalDateTime
 import mu.KotlinLogging
 import org.springframework.core.Ordered
@@ -31,6 +32,14 @@ class CoreExceptionResolver {
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
             .body(ErrorResponse(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), arrayListOf(), e.message))
+    }
+
+    @ExceptionHandler(UserAlreadyFoundException::class)
+    fun resolveUserAlreadyFoundException(e: UserAlreadyFoundException): ResponseEntity<ErrorResponse> {
+        log.error { e.message }
+        return ResponseEntity
+            .status(HttpStatus.CONFLICT)
+            .body(ErrorResponse(LocalDateTime.now(), HttpStatus.CONFLICT.value(), arrayListOf(), e.message))
     }
 }
 

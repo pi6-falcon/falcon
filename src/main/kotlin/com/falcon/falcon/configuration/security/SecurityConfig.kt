@@ -25,7 +25,8 @@ class SecurityConfig(
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
         http.authorizeRequests()
-            .antMatchers(HttpMethod.POST, "/auth").permitAll()
+            .antMatchers(HttpMethod.POST, "/auth", "/user")
+            .permitAll()
             .anyRequest().authenticated()
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
