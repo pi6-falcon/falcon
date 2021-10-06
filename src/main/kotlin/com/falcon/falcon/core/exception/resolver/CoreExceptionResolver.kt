@@ -1,8 +1,10 @@
 package com.falcon.falcon.core.exception.resolver
 
+import com.falcon.falcon.core.exception.InvalidUserCredentialsException
 import com.falcon.falcon.core.exception.ShortUrlAlreadyExistsException
 import com.falcon.falcon.core.exception.UrlNotFoundException
 import com.falcon.falcon.core.exception.UserAlreadyFoundException
+import com.falcon.falcon.core.exception.UserNotFoundException
 import java.time.LocalDateTime
 import mu.KotlinLogging
 import org.springframework.core.Ordered
@@ -40,6 +42,22 @@ class CoreExceptionResolver {
         return ResponseEntity
             .status(HttpStatus.CONFLICT)
             .body(ErrorResponse(LocalDateTime.now(), HttpStatus.CONFLICT.value(), arrayListOf(), e.message))
+    }
+
+    @ExceptionHandler(InvalidUserCredentialsException::class)
+    fun resolveInvalidUserCredentialsException(e: InvalidUserCredentialsException): ResponseEntity<ErrorResponse> {
+        log.error { e.message }
+        return ResponseEntity
+            .status(HttpStatus.UNAUTHORIZED)
+            .body(ErrorResponse(LocalDateTime.now(), HttpStatus.UNAUTHORIZED.value(), arrayListOf(), e.message))
+    }
+
+    @ExceptionHandler(UserNotFoundException::class)
+    fun resolveUserNotFoundException(e: UserNotFoundException): ResponseEntity<ErrorResponse> {
+        log.error { e.message }
+        return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
+            .body(ErrorResponse(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), arrayListOf(), e.message))
     }
 }
 
