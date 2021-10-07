@@ -1,5 +1,9 @@
 package com.falcon.falcon.security.utils
 
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.Assertions
@@ -12,23 +16,41 @@ import org.junit.jupiter.api.extension.ExtendWith
 class JwtUtilsTest {
 
     @InjectMockKs
-    var jwtUtils = JwtUtils()
+    var jwtUtils = JwtUtils("secret", "60000")
 
     @Test
-    @DisplayName("token not valid")
     fun tokenNotValid() {
         Assertions.assertFalse(jwtUtils.isTokenValid(""))
     }
 
     @Test
-    @DisplayName("get username in jwt")
     fun usernameNullInToken() {
         Assertions.assertEquals(null, jwtUtils.getUsernameFromToken(""))
     }
 
     @Test
-    @DisplayName("generate jwt without envs")
-    fun generateTokenWithoutEnvs() {
-        assertThrows<UninitializedPropertyAccessException> { jwtUtils.generateToken("teste") }
+    fun generateToke() {
+         var result =  jwtUtils.generateToken("teste")
+
+        result.shouldNotBeNull()
     }
+
+    @Test
+    fun tokenIsValid() {
+        var token =  jwtUtils.generateToken("teste")
+
+        var result = jwtUtils.isTokenValid(token)
+
+        result.shouldBeTrue()
+    }
+
+    @Test
+    fun tokenWithBlackSubject() {
+        var token =  jwtUtils.generateToken("   ")
+
+        var result = jwtUtils.isTokenValid(token)
+
+        result.shouldBeFalse()
+    }
+
 }

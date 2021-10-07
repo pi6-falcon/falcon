@@ -16,7 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 class JwtFilter(private val jwtUtils: JwtUtils, private val findByUserNameUseCase: FindByUserNameUseCase) : OncePerRequestFilter() {
 
     private val log = KotlinLogging.logger {}
-
+    
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
         request.getHeader(AUTHORIZATION)?.extractToken()?.let { token ->
             jwtUtils.getUsernameFromToken(token)?.let { username ->
