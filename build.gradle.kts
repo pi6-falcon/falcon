@@ -14,7 +14,7 @@ jacoco {
 }
 
 group = "com.falcon"
-version = "2.0"
+version = "2.0-dev-test"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
@@ -101,7 +101,7 @@ tasks.jacocoTestCoverageVerification {
         }
     }
 }
-// Removes the falcon-1.0-plain.jar file on the build/libs
+// Removes the **-plain.jar file on the build/libs
 tasks.getByName<Jar>("jar") {
     enabled = false
 }

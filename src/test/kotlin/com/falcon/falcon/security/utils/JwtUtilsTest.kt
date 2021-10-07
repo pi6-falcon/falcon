@@ -1,34 +1,75 @@
 package com.falcon.falcon.security.utils
 
-import io.mockk.impl.annotations.InjectMockKs
-import io.mockk.junit5.MockKExtension
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.DisplayName
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
+import java.util.stream.Stream
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.extension.ExtensionContext
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.ArgumentsProvider
+import org.junit.jupiter.params.provider.ArgumentsSource
 
-@ExtendWith(MockKExtension::class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class JwtUtilsTest {
 
-    @InjectMockKs
-    var jwtUtils = JwtUtils()
+    private val jwtUtils = JwtUtils("dummy-secret", "60000")
 
-    @Test
-    @DisplayName("token not valid")
-    fun tokenNotValid() {
-        Assertions.assertFalse(jwtUtils.isTokenValid(""))
+    @Nested
+    inner class GenerateToken {
+
+        @Test
+        fun `Should generate valid token`() {
+            val result = jwtUtils.generateToken("")
+            result.shouldNotBeNull()
+        }
     }
 
-    @Test
-    @DisplayName("get username in jwt")
-    fun usernameNullInToken() {
-        Assertions.assertEquals(null, jwtUtils.getUsernameFromToken(""))
+    @Nested
+    inner class GetUsernameFromToken {
+
+        @Test
+        fun `Should return the subject of token if token is valid`() {
+            // Given
+            val username = "username"
+            val token = jwtUtils.generateToken(username)
+            // When
+            val result = jwtUtils.getUsernameFromToken(token)
+            // Then
+            result.shouldBe(username)
+        }
+
+        @Test
+        fun `Should return null if token is invalid`() {
+            // Given
+            val token = jwtUtils.generateToken("")
+            // When
+            val result = jwtUtils.getUsernameFromToken(token)
+            // Then
+            result.shouldBeNull()
+        }
     }
 
-    @Test
-    @DisplayName("generate jwt without envs")
-    fun generateTokenWithoutEnvs() {
-        assertThrows<UninitializedPropertyAccessException> { jwtUtils.generateToken("teste") }
+    @ParameterizedTest
+    @ArgumentsSource(TestTokenProvider::class)
+    fun `Should validate token correctly`(candidate: String, expectedError: Boolean) {
+        jwtUtils.isTokenValid(candidate).shouldBe(expectedError)
     }
+}
+
+private class TestTokenProvider : ArgumentsProvider {
+
+    private val jwtUtils = JwtUtils("dummy-secret", "60000")
+
+    override fun provideArguments(context: ExtensionContext?): Stream<out Arguments>? =
+        Stream.of(
+            Arguments.of("", false),
+            Arguments.of("   ", false),
+            Arguments.of("abcdefg123456", false),
+            Arguments.of(jwtUtils.generateToken("teste"), true),
+            Arguments.of(jwtUtils.generateToken(" "), false),
+        )
 }
