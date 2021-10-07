@@ -14,12 +14,15 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AuthenticateUserTest {
 
+
+    private val bCryptPasswordEncoder: BCryptPasswordEncoder = mockk()
     private val userDataProvider: UserDataProvider = mockk()
-    private val useCase: AuthenticateUser = AuthenticateUseCase(userDataProvider)
+    private val useCase: AuthenticateUser = AuthenticateUseCase(userDataProvider, bCryptPasswordEncoder)
 
     @BeforeEach
     fun init() {
@@ -35,6 +38,8 @@ class AuthenticateUserTest {
             val request = User("dummy-username", "dummy-password")
             val response = User("dummy-username", "dummy-password")
             val expectedResponse = User("dummy-username", "dummy-password")
+
+            every { bCryptPasswordEncoder.matches(request.password, any()) } returns true
             every { userDataProvider.findByUsername(request.username) } returns response
             // When
             val result = useCase.execute(request)
@@ -48,6 +53,8 @@ class AuthenticateUserTest {
             // Given
             val request = User("dummy-username", "dummy-password")
             val response = User("different-username", "different-password")
+
+            every { bCryptPasswordEncoder.matches(request.password, any()) } returns false
             every { userDataProvider.findByUsername(request.username) } returns response
             // When-Then
             shouldThrowExactly<InvalidUserCredentialsException> {

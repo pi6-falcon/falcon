@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AuthControllerTest {
@@ -26,6 +27,8 @@ class AuthControllerTest {
     private val authenticateUser: AuthenticateUseCase = mockk()
 
     private val jwtUtils: JwtUtils = mockk()
+
+    private val bCrypt: BCryptPasswordEncoder = mockk()
 
     private val authController: AuthController = AuthController(authenticateUser, jwtUtils)
 
@@ -43,6 +46,8 @@ class AuthControllerTest {
             val request = CreationUtils.buildAuthRequest()
 
             val executeResponse = User("teste", "123")
+
+            every { bCrypt.encode(any()) } returns "123"
 
             every { authenticateUser.execute(any()) } returns executeResponse
 

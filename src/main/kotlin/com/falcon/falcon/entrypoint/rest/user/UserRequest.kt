@@ -3,6 +3,7 @@ package com.falcon.falcon.entrypoint.rest.user
 import com.falcon.falcon.core.entity.User
 import javax.validation.constraints.NotBlank
 import org.hibernate.validator.constraints.Length
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 data class UserRequest(
     @field:NotBlank(message = "username must be sent")
@@ -11,9 +12,9 @@ data class UserRequest(
     val password: String
 )
 
-fun UserRequest.toDomain() =
+fun UserRequest.toDomain(bCrypt: BCryptPasswordEncoder) =
     User(
         username = this.username,
-        password = this.password
+        password = bCrypt.encode(this.password)
     )
 

@@ -6,6 +6,7 @@ import com.falcon.falcon.core.usecase.user.FindUserUseCaseImpl
 import javax.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -16,16 +17,17 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/user")
 class UserController(
     private val createUserUseCase: CreateUserUseCase,
-    private val getUserUseCase: FindUserUseCaseImpl
+    private val getUserUseCase: FindUserUseCaseImpl,
+    private val bCryptPasswordEncoder: BCryptPasswordEncoder
 ) {
 
     @PostMapping
     fun createUser(@RequestBody @Valid request: UserRequest): ResponseEntity<UserResponse> =
-        ResponseEntity(createUserUseCase.execute(request.toDomain()).toResponse(), HttpStatus.CREATED)
+        ResponseEntity(createUserUseCase.execute(request.toDomain(bCryptPasswordEncoder)).toResponse(), HttpStatus.CREATED)
 
     @GetMapping
     fun getUser(@RequestBody @Valid request: UserRequest): ResponseEntity<UserResponse> =
-        ResponseEntity(getUserUseCase.execute(request.toDomain()).toResponse(), HttpStatus.OK)
+        ResponseEntity(getUserUseCase.execute(request.toDomain(bCryptPasswordEncoder)).toResponse(), HttpStatus.OK)
 }
 
 private fun User.toResponse() = UserResponse(
