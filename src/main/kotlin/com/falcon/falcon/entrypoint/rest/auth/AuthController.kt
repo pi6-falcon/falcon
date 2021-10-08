@@ -1,8 +1,8 @@
 package com.falcon.falcon.entrypoint.rest.auth
 
 import com.falcon.falcon.core.entity.User
+import com.falcon.falcon.core.security.JwtUtils
 import com.falcon.falcon.core.usecase.auth.AuthenticateUseCase
-import com.falcon.falcon.security.utils.JwtUtils
 import javax.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/auth")
-class AuthController(private val authUseCase: AuthenticateUseCase, private val jwtUtils: JwtUtils) {
+class AuthController(
+    private val authUseCase: AuthenticateUseCase,
+    private val jwtUtils: JwtUtils,
+) {
 
     @PostMapping
     fun authenticateUser(@RequestBody @Valid request: AuthRequest): ResponseEntity<AuthResponse> =

@@ -1,7 +1,6 @@
-package com.falcon.falcon.security.filter
+package com.falcon.falcon.core.security
 
 import com.falcon.falcon.core.usecase.user.FindByUserNameUseCase
-import com.falcon.falcon.security.utils.JwtUtils
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse

@@ -1,8 +1,11 @@
 package com.falcon.falcon
 
+import com.falcon.falcon.entrypoint.rest.auth.AuthRequest
+import com.falcon.falcon.entrypoint.rest.auth.AuthResponse
 import com.falcon.falcon.entrypoint.rest.url.CustomShortenUrlRequest
 import com.falcon.falcon.entrypoint.rest.url.RandomShortenUrlRequest
 import com.falcon.falcon.entrypoint.rest.url.ShortenUrlResponse
+import com.falcon.falcon.entrypoint.rest.user.UserRequest
 
 class CreationUtils {
     companion object {
@@ -15,6 +18,12 @@ class CreationUtils {
 
         fun buildShortenUrlResponse(shortUrl: String = "this-is-a-dummy-short-url"): ShortenUrlResponse =
             ShortenUrlResponse(shortUrl = shortUrl)
+
+        fun buildAuthRequest(username: String? = "teste", password: String? = "123"): AuthRequest =
+            AuthRequest(username!!, password!!)
+
+        fun buildUserRequest(username: String? = "teste", password: String? = "123"): UserRequest =
+            UserRequest(username!!, password!!)
 
     }
 }

@@ -1,4 +1,4 @@
-package com.falcon.falcon.security.utils
+package com.falcon.falcon.core.security
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
@@ -8,13 +8,12 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class JwtUtils {
-
+class JwtUtils(
     @Value("\${jwt.secret}")
-    private lateinit var secret: String
-
+    private var secret: String,
     @Value("\${jwt.expiration}")
-    private lateinit var expiration: String
+    private var expiration: String
+) {
 
     fun generateToken(username: String): String = Jwts.builder()
         .setSubject(username)
@@ -25,7 +24,7 @@ class JwtUtils {
     fun isTokenValid(token: String): Boolean =
         getClaimsToken(token)?.let {
             val expirationDate = it.expiration
-            it.subject.isNotBlank() && expirationDate.isValid()
+            it.subject != null && expirationDate.isValid()
         } ?: false
 
     fun getUsernameFromToken(token: String): String? =
