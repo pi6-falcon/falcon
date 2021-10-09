@@ -1,9 +1,10 @@
-package com.falcon.falcon.security.filter
+package com.falcon.falcon.core.security.filter
 
 import com.falcon.falcon.core.entity.User
+import com.falcon.falcon.core.security.JwtFilter
+import com.falcon.falcon.core.security.JwtUtils
+import com.falcon.falcon.core.security.UserDetailsImpl
 import com.falcon.falcon.core.usecase.user.FindByUserNameUseCase
-import com.falcon.falcon.security.impl.UserDetailsImpl
-import com.falcon.falcon.security.utils.JwtUtils
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks

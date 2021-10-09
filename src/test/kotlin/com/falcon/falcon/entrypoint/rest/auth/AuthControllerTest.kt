@@ -2,10 +2,8 @@ package com.falcon.falcon.entrypoint.rest.auth
 
 import com.falcon.falcon.CreationUtils
 import com.falcon.falcon.core.entity.User
+import com.falcon.falcon.core.security.JwtUtils
 import com.falcon.falcon.core.usecase.auth.AuthenticateUseCase
-import com.falcon.falcon.entrypoint.rest.url.ShortenUrlResponse
-import com.falcon.falcon.entrypoint.rest.url.toDomain
-import com.falcon.falcon.security.utils.JwtUtils
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeTypeOf

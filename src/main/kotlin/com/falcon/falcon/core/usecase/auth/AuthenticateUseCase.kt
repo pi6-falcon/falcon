@@ -13,15 +13,16 @@ interface AuthenticateUser {
 }
 
 @Service
-class AuthenticateUseCase(private val userDataProvider: UserDataProvider,
-                          private val bCrypt: BCryptPasswordEncoder) : AuthenticateUser {
+class AuthenticateUseCase(
+    private val userDataProvider: UserDataProvider,
+    private val bCrypt: BCryptPasswordEncoder
+) : AuthenticateUser {
 
-    override fun execute(request: User): User {
+    override fun execute(request: User): User =
         userDataProvider.findByUsername(request.username)?.let {
             if (it.username != request.username || !bCrypt.matches(request.password, it.password)) {
                 throw InvalidUserCredentialsException()
             }
-            return it
+            it
         } ?: throw UserNotFoundException()
-    }
 }

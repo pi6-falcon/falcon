@@ -8,5 +8,9 @@ data class Url(
     @ValidUrl
     val longUrl: String = "",
     val userIdentifier: String = "", // TODO: pending until JWT is implemented
-    val type: UrlType = UrlType.RANDOM
+    val type: UrlType = UrlType.RANDOM,
+    /**
+     * EPOCH value
+     */
+    val expiresIn: Long? = null
 )

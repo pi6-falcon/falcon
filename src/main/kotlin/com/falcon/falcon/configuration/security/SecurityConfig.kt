@@ -1,7 +1,7 @@
 package com.falcon.falcon.configuration.security
 
+import com.falcon.falcon.core.security.JwtFilter
 import com.falcon.falcon.core.usecase.user.FindByUserNameUseCase
-import com.falcon.falcon.security.filter.JwtFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder

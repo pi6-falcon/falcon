@@ -1,4 +1,4 @@
-package com.falcon.falcon.security.utils
+package com.falcon.falcon.core.security
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts

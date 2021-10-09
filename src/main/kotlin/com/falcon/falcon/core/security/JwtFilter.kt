@@ -1,7 +1,6 @@
-package com.falcon.falcon.security.filter
+package com.falcon.falcon.core.security
 
 import com.falcon.falcon.core.usecase.user.FindByUserNameUseCase
-import com.falcon.falcon.security.utils.JwtUtils
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -16,7 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 class JwtFilter(private val jwtUtils: JwtUtils, private val findByUserNameUseCase: FindByUserNameUseCase) : OncePerRequestFilter() {
 
     private val log = KotlinLogging.logger {}
-    
+
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
         request.getHeader(AUTHORIZATION)?.extractToken()?.let { token ->
             jwtUtils.getUsernameFromToken(token)?.let { username ->

@@ -1,5 +1,6 @@
-package com.falcon.falcon.security.utils
+package com.falcon.falcon.core.security.utils
 
+import com.falcon.falcon.core.security.JwtUtils
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
