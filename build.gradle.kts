@@ -14,7 +14,7 @@ jacoco {
 }
 
 group = "com.falcon"
-version = "2.0-dev-test"
+version = "3.0.0"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
@@ -111,5 +111,6 @@ sonarqube {
         property("sonar.projectKey", "pi6-falcon_falcon")
         property("sonar.organization", "pi6-falcon")
         property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
     }
 }

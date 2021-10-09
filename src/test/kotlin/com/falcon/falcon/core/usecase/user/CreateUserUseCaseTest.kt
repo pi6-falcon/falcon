@@ -8,16 +8,19 @@ import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CreateUserUseCaseTest {
 
     private val userDataProvider: UserDataProvider = mockk()
-    private val useCase: CreateUserUseCase = CreateUserUseCase(userDataProvider)
+    private val bCryptPasswordEncoder: BCryptPasswordEncoder = mockk()
+    private val useCase: CreateUserUseCase = CreateUserUseCase(userDataProvider, bCryptPasswordEncoder)
 
     @BeforeEach
     fun init() {
@@ -30,14 +33,23 @@ class CreateUserUseCaseTest {
         @Test
         fun `Should create new user successfully`() {
             // Given
-            val request = User("dummy-username", "dummy-password")
-            val response = User("dummy-username", "dummy-password")
+            val username = "dummy-username"
+            val password = "dummy-password"
+            val encryptedPassword = "encrypted-dummy-password"
+            val request = User(username, password)
+            val expectedUser = User(username, encryptedPassword)
             every { userDataProvider.isUserAlreadyCreated(request) } returns false
-            every { userDataProvider.save(request) } returns response
+            every { userDataProvider.save(expectedUser) } returns expectedUser
+            every { bCryptPasswordEncoder.encode(password) } returns encryptedPassword
             // When
             val result = useCase.execute(request)
             // Then
-            result.shouldBe(response)
+            verify(exactly = 1) {
+                bCryptPasswordEncoder.encode(password)
+                userDataProvider.save(expectedUser)
+            }
+
+            result.shouldBe(expectedUser)
         }
 
         @Test

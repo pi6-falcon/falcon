@@ -1,4 +1,4 @@
-package com.falcon.falcon.security.impl
+package com.falcon.falcon.core.security
 
 import com.falcon.falcon.core.entity.User
 import org.springframework.security.core.GrantedAuthority

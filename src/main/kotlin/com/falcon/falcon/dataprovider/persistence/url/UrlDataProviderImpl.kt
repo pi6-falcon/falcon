@@ -34,12 +34,14 @@ private fun Url.toDatabaseEntity(): UrlEntity =
     UrlEntity(
         shortUrl = this.shortUrl,
         longUrl = this.longUrl,
-        userIdentifier = this.userIdentifier
+        userIdentifier = this.userIdentifier,
+        timeToLive = this.expiresIn
     )
 
 private fun UrlEntity.toCoreEntity(): Url =
     Url(
         shortUrl = this.shortUrl,
         longUrl = this.longUrl,
-        userIdentifier = this.userIdentifier
+        userIdentifier = this.userIdentifier,
+        expiresIn = this.timeToLive
     )
