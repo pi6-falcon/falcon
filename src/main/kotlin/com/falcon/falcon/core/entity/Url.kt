@@ -7,10 +7,10 @@ data class Url(
     var shortUrl: String = "",
     @ValidUrl
     val longUrl: String = "",
-    val userIdentifier: String = "", // TODO: pending until JWT is implemented
+    var userIdentifier: String = "", // TODO: pending until JWT is implemented
     val type: UrlType = UrlType.RANDOM,
     /**
      * EPOCH value
      */
-    val expiresIn: Long? = null
+    var expiresIn: Long? = null
 )

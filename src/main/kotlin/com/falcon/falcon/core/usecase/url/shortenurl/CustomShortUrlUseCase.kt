@@ -6,6 +6,7 @@ import com.falcon.falcon.dataprovider.persistence.url.UrlDataProvider
 import javax.validation.Valid
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.validation.annotation.Validated
 
@@ -21,6 +22,9 @@ class CustomShortUrlUseCase(private val urlDataProvider: UrlDataProvider) : UrlS
             log.error { "A identifier with the custom URL ${request.shortUrl} already exists." }
             throw ShortUrlAlreadyExistsException()
         }
+        request.userIdentifier = SecurityContextHolder.getContext().authentication.name
+
+        log.info { "Username   ${request.userIdentifier}" }
 
         return urlDataProvider.save(request)
     }

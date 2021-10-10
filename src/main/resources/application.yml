@@ -28,3 +28,7 @@ spring:
 jwt:
   secret: ${SECRET}
   expiration: ${JWT_EXPIRATION}
+
+url:
+  ttl: ${URL_TTL}
+  maxUrlsTempUser: ${MAX_URL_TEMP_USER}

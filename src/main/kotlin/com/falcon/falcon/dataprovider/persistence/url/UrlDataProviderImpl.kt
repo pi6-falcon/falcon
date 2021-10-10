@@ -3,6 +3,8 @@ package com.falcon.falcon.dataprovider.persistence.url
 import com.falcon.falcon.core.entity.Url
 import mu.KotlinLogging
 import org.springframework.stereotype.Service
+import java.util.stream.Collectors
+import kotlin.streams.toList
 
 interface UrlDataProvider {
 
@@ -10,6 +12,7 @@ interface UrlDataProvider {
     fun urlAlreadyExists(shortUrl: String): Boolean
     fun delete(request: Url)
     fun getByShortUrl(shortUrl: String): Url?
+    fun getUrlsByUserIdentifier(userIdentifier: String): List<Url>?
 }
 
 @Service
@@ -28,6 +31,11 @@ class UrlDataProviderImpl(private val repository: UrlRepository) : UrlDataProvid
 
     override fun getByShortUrl(shortUrl: String): Url? =
         repository.findByShortUrl(shortUrl)?.toCoreEntity()
+
+    override fun getUrlsByUserIdentifier(userIdentifier: String): List<Url>? =
+        repository.findByUserIdentifier(userIdentifier)?.stream()?.map {
+            it -> it.toCoreEntity()
+        }?.toList()
 }
 
 private fun Url.toDatabaseEntity(): UrlEntity =

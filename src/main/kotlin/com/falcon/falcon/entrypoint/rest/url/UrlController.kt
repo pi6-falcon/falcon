@@ -1,6 +1,7 @@
 package com.falcon.falcon.entrypoint.rest.url
 
 import com.falcon.falcon.core.entity.Url
+import com.falcon.falcon.core.enumeration.UrlType
 import com.falcon.falcon.core.usecase.url.deleteshortenurl.DeleteShortenedUrl
 import com.falcon.falcon.core.usecase.url.shortenurl.UrlShortener
 import javax.validation.Valid
@@ -25,7 +26,7 @@ class UrlController(
 ) {
 
     @PostMapping
-    fun shortenToRandomUrl(@Valid @RequestBody request: RandomShortenUrlRequest): ResponseEntity<ShortenUrlResponse> =
+    fun shortenToRandomUrl(@RequestBody @Valid request: RandomShortenUrlRequest): ResponseEntity<ShortenUrlResponse> =
         ResponseEntity(randomShortUrlUseCase.execute(request.toDomain()).toResponse(), HttpStatus.CREATED)
 
     @PostMapping("/custom")

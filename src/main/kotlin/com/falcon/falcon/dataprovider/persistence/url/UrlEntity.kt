@@ -16,7 +16,7 @@ data class UrlEntity(
     var userIdentifier: String = "",
     @DynamoDBAttribute(attributeName = "url_type")
     @DynamoDBTypeConvertedEnum
-    val type: UrlType = UrlType.RANDOM,
+    var type: UrlType = UrlType.RANDOM,
     /**
      * Receives an EPOCH as value
      */

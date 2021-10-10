@@ -14,3 +14,5 @@ fun RandomShortenUrlRequest.toDomain() =
         longUrl = this.longUrl!!,
         type = UrlType.RANDOM
     )
+
+

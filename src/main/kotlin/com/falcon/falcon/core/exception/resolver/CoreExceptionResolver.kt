@@ -1,10 +1,6 @@
 package com.falcon.falcon.core.exception.resolver
 
-import com.falcon.falcon.core.exception.InvalidUserCredentialsException
-import com.falcon.falcon.core.exception.ShortUrlAlreadyExistsException
-import com.falcon.falcon.core.exception.UrlNotFoundException
-import com.falcon.falcon.core.exception.UserAlreadyFoundException
-import com.falcon.falcon.core.exception.UserNotFoundException
+import com.falcon.falcon.core.exception.*
 import java.time.LocalDateTime
 import mu.KotlinLogging
 import org.springframework.core.Ordered
@@ -57,6 +53,14 @@ class CoreExceptionResolver {
         log.error { e.message }
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
+            .body(ErrorResponse(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), arrayListOf(), e.message))
+    }
+
+    @ExceptionHandler(MaxNumberOfUrlsException::class)
+    fun resolveMaxNumberOfUrlsException(e: UserNotFoundException): ResponseEntity<ErrorResponse> {
+        log.error { e.message }
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
             .body(ErrorResponse(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), arrayListOf(), e.message))
     }
 }
