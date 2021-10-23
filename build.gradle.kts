@@ -80,13 +80,14 @@ tasks.withType<JacocoReport> {
         classDirectories.setFrom(files(classDirectories.files.map {
             fileTree(it).apply {
                 // Main class
-                exclude("**/falcon/*.*")
-                // Configuration classes
-//                exclude("**/falcon/configuration/**")
-                // Exception classes
-//                exclude("**/falcon/common/exception/resolver/**.*")
-                // Log class (Kotlin compatibility)
-                exclude("**/*log*.class")
+                exclude(
+                    // Root (main)
+                    "**/falcon/*.*",
+                    // Utils
+                    "**/MutableHttpServletRequest.*",
+                    // Log class
+                    "**/*log*.class",
+                )
             }
         }))
     }
