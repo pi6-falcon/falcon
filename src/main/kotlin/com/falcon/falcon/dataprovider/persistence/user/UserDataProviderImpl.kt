@@ -1,6 +1,7 @@
 package com.falcon.falcon.dataprovider.persistence.user
 
 import com.falcon.falcon.core.entity.User
+import java.time.Instant
 import org.springframework.stereotype.Service
 
 interface UserDataProvider {
@@ -25,11 +26,15 @@ class UserDataProviderImpl(private val repository: UserRepository) : UserDataPro
 private fun User.toDatabaseEntity(): UserEntity =
     UserEntity(
         username = this.username,
-        password = this.password
+        password = this.password,
+        type = this.type,
+        expirationDate = this.expirationDate?.epochSecond
     )
 
 private fun UserEntity.toCoreEntity(): User =
     User(
         username = this.username,
-        password = this.password
+        password = this.password,
+        type = this.type,
+        expirationDate = this.expirationDate?.let { Instant.ofEpochSecond(it) }
     )

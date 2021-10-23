@@ -2,6 +2,7 @@ package com.falcon.falcon.entrypoint.rest.user
 
 import com.falcon.falcon.CreationUtils
 import com.falcon.falcon.core.entity.User
+import com.falcon.falcon.core.enumeration.UserType
 import com.falcon.falcon.core.usecase.user.CreateUserUseCase
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -35,7 +36,7 @@ class UserControllerTest {
         fun `Should create user successfully`() {
             // Given
             val request = CreationUtils.buildUserRequest("teste", "123")
-            val response = User("teste", "123")
+            val response = User("teste", "123", UserType.PERMANENT)
             every { createUser.execute(any()) } returns response
             // When
             val result = userController.createUser(request)

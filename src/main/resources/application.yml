@@ -6,10 +6,16 @@ server:
     include-exception: false
     include-stacktrace: on_param
 
-aws:
-  access_key_id: ${AWS_ACCESS_KEY_ID}
-  secret_key: ${AWS_SECRET_ACCESS_KEY}
-  endpoint: ${AWS_DYNAMO_ENDPOINT}
+api:
+  jwt:
+    secret: ${JWT_SECRET}
+    default-expiration-in-hour: 1
+  trial:
+    default-expiration-in-hour: 144
+  aws:
+    access_key_id: ${AWS_ACCESS_KEY_ID}
+    secret_key: ${AWS_SECRET_ACCESS_KEY}
+    endpoint: ${AWS_DYNAMO_ENDPOINT}
 
 springdoc:
   api-docs:
@@ -24,11 +30,3 @@ spring:
   security:
     filter:
       order: 1
-
-jwt:
-  secret: ${SECRET}
-  expiration: ${JWT_EXPIRATION}
-
-url:
-  ttl: ${URL_TTL}
-  maxUrlsTempUser: ${MAX_URL_TEMP_USER}

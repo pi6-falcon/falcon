@@ -1,7 +1,11 @@
 package com.falcon.falcon.core.exception.resolver
 
-import com.falcon.falcon.core.exception.*
-import java.time.LocalDateTime
+import com.falcon.falcon.core.exception.InvalidUserCredentialsException
+import com.falcon.falcon.core.exception.ShortUrlAlreadyExistsException
+import com.falcon.falcon.core.exception.ShortenUrlLimitExceededException
+import com.falcon.falcon.core.exception.UrlNotFoundException
+import com.falcon.falcon.core.exception.UserAlreadyFoundException
+import com.falcon.falcon.core.exception.UserNotFoundException
 import mu.KotlinLogging
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
@@ -9,6 +13,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import java.time.LocalDateTime
 
 @ControllerAdvice
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
@@ -56,12 +61,12 @@ class CoreExceptionResolver {
             .body(ErrorResponse(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), arrayListOf(), e.message))
     }
 
-    @ExceptionHandler(MaxNumberOfUrlsException::class)
-    fun resolveMaxNumberOfUrlsException(e: UserNotFoundException): ResponseEntity<ErrorResponse> {
+    @ExceptionHandler(ShortenUrlLimitExceededException::class)
+    fun resolveShortenUrlLimitExceededException(e: ShortenUrlLimitExceededException): ResponseEntity<ErrorResponse> {
         log.error { e.message }
         return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body(ErrorResponse(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), arrayListOf(), e.message))
+            .status(HttpStatus.FORBIDDEN)
+            .body(ErrorResponse(LocalDateTime.now(), HttpStatus.FORBIDDEN.value(), arrayListOf(), e.message))
     }
 }
 

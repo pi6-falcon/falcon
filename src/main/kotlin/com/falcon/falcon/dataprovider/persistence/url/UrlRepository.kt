@@ -8,5 +8,7 @@ interface UrlRepository : CrudRepository<UrlEntity, String> {
 
     fun findByShortUrl(shortUrl: String): UrlEntity?
 
-    fun findByUserIdentifier(userIdentifier: String) : List<UrlEntity>?
+    fun findByShortUrlAndUserIdentifier(shortUrl: String, userIdentifier: String): UrlEntity?
+
+    fun findAllByUserIdentifier(userIdentifier: String): List<UrlEntity>
 }

@@ -17,7 +17,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class JwtUtilsTest {
 
-    private val jwtUtils = JwtUtils("dummy-secret", "60000")
+    private val jwtUtils = JwtUtils("dummy-secret", 3)
 
     @Nested
     inner class GenerateToken {
@@ -63,7 +63,7 @@ class JwtUtilsTest {
 
 private class TestTokenProvider : ArgumentsProvider {
 
-    private val jwtUtils = JwtUtils("dummy-secret", "60000")
+    private val jwtUtils = JwtUtils("dummy-secret", 3)
 
     override fun provideArguments(context: ExtensionContext?): Stream<out Arguments>? =
         Stream.of(

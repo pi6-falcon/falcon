@@ -38,12 +38,12 @@ class RandomShortUrlUseCaseTest {
             val expectedRequest = Url(longUrl = "dummy-long-url", shortUrl = generatedShortUrl)
             every { urlDataProvider.urlAlreadyExists(generatedShortUrl) } returns false
             every { urlDataProvider.save(expectedRequest) } returns expectedRequest
-            every { useCase.generateShortUrl() } returns generatedShortUrl
+            every { useCase.createUniqueShortUrl() } returns generatedShortUrl
             // When
             val result = useCase.execute(request)
             // Then
             verify(exactly = 1) {
-                useCase.generateShortUrl()
+                useCase.createUniqueShortUrl()
                 urlDataProvider.urlAlreadyExists(generatedShortUrl)
                 urlDataProvider.save(expectedRequest)
             }
@@ -57,14 +57,14 @@ class RandomShortUrlUseCaseTest {
             val generatedShortUrl = "abcdefg"
             val request = Url(longUrl = "dummy-long-url")
             val expectedRequest = Url(longUrl = "dummy-long-url", shortUrl = generatedShortUrl, type = UrlType.RANDOM)
-            every { useCase.generateShortUrl() } returns generatedShortUrl
+            every { useCase.createUniqueShortUrl() } returns generatedShortUrl
             every { urlDataProvider.urlAlreadyExists(generatedShortUrl) } returns true andThen false
             every { urlDataProvider.save(expectedRequest) } returns expectedRequest
             // When
             val result = useCase.execute(request)
             // Then
             verify(exactly = 2) {
-                useCase.generateShortUrl()
+                useCase.createUniqueShortUrl()
                 urlDataProvider.urlAlreadyExists(generatedShortUrl)
             }
 
@@ -80,7 +80,7 @@ class RandomShortUrlUseCaseTest {
         @Test
         fun `Should returns a 6 (six) length string`() {
             // When
-            val result = useCase.generateShortUrl()
+            val result = useCase.createUniqueShortUrl()
             // Then
             result.length.shouldBeExactly(6)
             result.shouldBeTypeOf<String>()

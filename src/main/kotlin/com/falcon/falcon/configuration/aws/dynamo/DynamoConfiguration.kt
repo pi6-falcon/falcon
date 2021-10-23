@@ -11,11 +11,11 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 @EnableDynamoDBRepositories(basePackages = ["com.falcon.falcon.dataprovider.persistence"])
 class DynamoConfiguration(
-    @Value("\${aws.access_key_id}")
+    @Value("\${api.aws.access_key_id}")
     private var awsAccessKeyId: String,
-    @Value("\${aws.secret_key}")
+    @Value("\${api.aws.secret_key}")
     private var awsSecretKey: String,
-    @Value("\${aws.endpoint}")
+    @Value("\${api.aws.endpoint}")
     private var awsEndpoint: String,
 ) {
 

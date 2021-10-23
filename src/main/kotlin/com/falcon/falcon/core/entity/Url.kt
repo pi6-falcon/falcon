@@ -2,15 +2,13 @@ package com.falcon.falcon.core.entity
 
 import com.falcon.falcon.core.enumeration.UrlType
 import com.falcon.falcon.entrypoint.common.validation.url.ValidUrl
+import java.time.Instant
 
 data class Url(
-    var shortUrl: String = "",
+    val shortUrl: String = "",
     @ValidUrl
     val longUrl: String = "",
-    var userIdentifier: String = "", // TODO: pending until JWT is implemented
+    val userIdentifier: String = "",
     val type: UrlType = UrlType.RANDOM,
-    /**
-     * EPOCH value
-     */
-    var expiresIn: Long? = null
+    val expirationDate: Instant? = Instant.now()
 )

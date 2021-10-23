@@ -19,4 +19,8 @@ class UserDetailsImpl(private val user: User) : UserDetails {
     override fun isCredentialsNonExpired() = true
 
     override fun isEnabled() = true
+
+    fun getType() = user.type
+
+    fun getUser() = user
 }
