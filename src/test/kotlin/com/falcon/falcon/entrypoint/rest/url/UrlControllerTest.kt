@@ -3,7 +3,9 @@ package com.falcon.falcon.entrypoint.rest.url
 import com.falcon.falcon.CreationUtils
 import com.falcon.falcon.ValidateBeans
 import com.falcon.falcon.core.entity.Url
+import com.falcon.falcon.core.entity.User
 import com.falcon.falcon.core.enumeration.UrlType
+import com.falcon.falcon.core.security.UserDetailsImpl
 import com.falcon.falcon.core.usecase.url.deleteshortenurl.DeleteShortenedUrl
 import com.falcon.falcon.core.usecase.url.shortenurl.UrlShortener
 import com.falcon.falcon.validate
@@ -16,7 +18,6 @@ import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
 import io.mockk.verify
-import java.util.stream.Stream
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -28,6 +29,8 @@ import org.junit.jupiter.params.provider.ArgumentsProvider
 import org.junit.jupiter.params.provider.ArgumentsSource
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.Authentication
+import java.util.stream.Stream
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UrlControllerTest {
@@ -35,6 +38,7 @@ class UrlControllerTest {
     private val randomShortUrlUseCase: UrlShortener = mockk()
     private val customShortUrlUseCase: UrlShortener = mockk()
     private val deleteShortenedUrlUseCase: DeleteShortenedUrl = mockk()
+    private val authentication: Authentication = mockk()
     private val controller = UrlController(randomShortUrlUseCase, customShortUrlUseCase, deleteShortenedUrlUseCase)
 
     @BeforeEach
@@ -49,14 +53,16 @@ class UrlControllerTest {
         fun `Should convert then return ResponseEntity of ShortenUrlResponse with HttpStatus CREATED`() {
             // Given
             val request = CreationUtils.buildRandomShortenUrlRequest()
-            val expectedRequest = Url(longUrl = request.longUrl!!, type = UrlType.RANDOM)
+            val user = User("dummy-user", "dummy-password")
+            val expectedRequest = Url(longUrl = request.longUrl!!, type = UrlType.RANDOM, expirationDate = null)
             val expectedResponse = CreationUtils.buildShortenUrlResponse()
 
-            every { randomShortUrlUseCase.execute(expectedRequest) } returns Url(shortUrl = expectedResponse.shortUrl)
+            every { randomShortUrlUseCase.execute(expectedRequest, user) } returns Url(shortUrl = expectedResponse.shortUrl)
+            every { authentication.principal } returns UserDetailsImpl(user)
             // When
-            val result = controller.shortenToRandomUrl(request)
+            val result = controller.shortenToRandomUrl(request, authentication)
             // Then
-            verify(exactly = 1) { randomShortUrlUseCase.execute(request.toDomain()) }
+            verify(exactly = 1) { randomShortUrlUseCase.execute(request.toDomain(), user) }
             result.statusCode.shouldBe(HttpStatus.CREATED)
             result.body!!.shortUrl.shouldBe(expectedResponse.shortUrl)
             result.shouldBeTypeOf<ResponseEntity<ShortenUrlResponse>>()
@@ -72,11 +78,13 @@ class UrlControllerTest {
             val request = CreationUtils.buildCustomShortenUrlRequest()
             val expectedRequest = Url(shortUrl = request.customUrl!!, longUrl = request.longUrl!!, type = UrlType.CUSTOM)
             val expectedResponse = CreationUtils.buildShortenUrlResponse()
-            every { customShortUrlUseCase.execute(expectedRequest) } returns Url(shortUrl = expectedResponse.shortUrl)
+            val user = User("dummy-username", "dummy-password")
+            every { customShortUrlUseCase.execute(expectedRequest, user) } returns Url(shortUrl = expectedResponse.shortUrl)
+            every { authentication.principal } returns UserDetailsImpl(user)
             // When
-            val result = controller.shortenToCustomUrl(request)
+            val result = controller.shortenToCustomUrl(request, authentication)
             // Then
-            verify(exactly = 1) { customShortUrlUseCase.execute(request.toDomain()) }
+            verify(exactly = 1) { customShortUrlUseCase.execute(request.toDomain(), user) }
             result.statusCode.shouldBe(HttpStatus.CREATED)
             result.body!!.shortUrl.shouldBe(expectedResponse.shortUrl)
             result.shouldBeTypeOf<ResponseEntity<ShortenUrlResponse>>()
@@ -90,11 +98,13 @@ class UrlControllerTest {
         fun `Should convert then return ResponseEntity of Void with HttpStatus NO_CONTENT`() {
             // Given
             val request = "this-is-a-shortened-url"
-            justRun { deleteShortenedUrlUseCase.execute(request) }
+            val user = User("dummy-username", "dummy-password")
+            justRun { deleteShortenedUrlUseCase.execute(request, user) }
+            every { authentication.principal } returns UserDetailsImpl(user)
             // When
-            val result = controller.deleteShortenedLongUrl(request)
+            val result = controller.deleteShortenedUrl(request, authentication)
             // Then
-            verify(exactly = 1) { deleteShortenedUrlUseCase.execute(request) }
+            verify(exactly = 1) { deleteShortenedUrlUseCase.execute(request, user) }
             result.statusCode.shouldBe(HttpStatus.NO_CONTENT)
             result.body.shouldBeNull()
             result.shouldBeTypeOf<ResponseEntity<Void>>()

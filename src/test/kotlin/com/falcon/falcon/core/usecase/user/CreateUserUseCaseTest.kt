@@ -21,7 +21,7 @@ class CreateUserUseCaseTest {
 
     private val userDataProvider: UserDataProvider = mockk()
     private val bCryptPasswordEncoder: BCryptPasswordEncoder = mockk()
-    private val useCase: CreateUserUseCase = CreateUserUseCaseImpl(userDataProvider)
+    private val useCase: CreateUserUseCase = CreateUserUseCaseImpl(userDataProvider, bCryptPasswordEncoder)
 
     @BeforeEach
     fun init() {

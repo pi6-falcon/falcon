@@ -10,5 +10,5 @@ data class Url(
     val longUrl: String = "",
     val userIdentifier: String = "",
     val type: UrlType = UrlType.RANDOM,
-    val expirationDate: Instant? = Instant.now()
+    val expirationDate: Instant? = null
 )

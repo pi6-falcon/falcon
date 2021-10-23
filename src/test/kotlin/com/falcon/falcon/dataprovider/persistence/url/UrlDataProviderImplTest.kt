@@ -36,9 +36,8 @@ class UrlDataProviderImplTest {
             val longUrl = "long-url"
             val user = "user"
             val urlType = UrlType.RANDOM
-            val request = Url(shortUrl, longUrl, user, urlType)
+            val request = Url(shortUrl, longUrl, user, urlType, expirationDate = null)
             val expectedRequest = UrlEntity(shortUrl, longUrl, user, urlType)
-            val expectedResponse = Url(shortUrl, longUrl, user, urlType)
             every { repository.save(expectedRequest) } returns expectedRequest
             // When
             val result = provider.save(request)
@@ -84,7 +83,7 @@ class UrlDataProviderImplTest {
             val longUrl = "long-url"
             val user = "user"
             val urlType = UrlType.RANDOM
-            val request = Url(shortUrl, longUrl, user, urlType)
+            val request = Url(shortUrl, longUrl, user, urlType, expirationDate = null)
             val expectedRequest = UrlEntity(shortUrl, longUrl, user, urlType)
             justRun { repository.delete(expectedRequest) }
             // When
@@ -105,7 +104,7 @@ class UrlDataProviderImplTest {
             val user = "user"
             val urlType = UrlType.RANDOM
             val response = UrlEntity(shortUrl, longUrl, user, urlType)
-            val expectedResponse = Url(shortUrl, longUrl, user, urlType)
+            val expectedResponse = Url(shortUrl, longUrl, user, urlType, expirationDate = null)
             every { repository.findByShortUrl(shortUrl) } returns response
             // When
             val result = provider.getByShortUrl(shortUrl)
