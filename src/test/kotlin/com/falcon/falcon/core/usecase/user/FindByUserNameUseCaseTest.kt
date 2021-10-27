@@ -1,6 +1,7 @@
 package com.falcon.falcon.core.usecase.user
 
 import com.falcon.falcon.core.entity.User
+import com.falcon.falcon.core.enumeration.UserType
 import com.falcon.falcon.dataprovider.persistence.user.UserDataProvider
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.matchers.shouldBe
@@ -31,7 +32,7 @@ class FindByUserNameUseCaseTest {
         @Test
         fun `Should return user successfully`() {
             // Given
-            val user = User("dummy-username", "dummy-password")
+            val user = User("dummy-username", "dummy-password", UserType.PERMANENT)
             every { userDataProvider.findByUsername(user.username) } returns user
             // When
             val result = useCase.loadUserByUsername(user.username)
@@ -46,7 +47,7 @@ class FindByUserNameUseCaseTest {
         @Test
         fun `Should return exception if user does not exist`() {
             // Given
-            val user = User("dummy-username", "dummy-password")
+            val user = User("dummy-username", "dummy-password", UserType.PERMANENT)
             every { userDataProvider.findByUsername(user.username) } returns null
             // When-Then
             shouldThrowExactly<UsernameNotFoundException> {

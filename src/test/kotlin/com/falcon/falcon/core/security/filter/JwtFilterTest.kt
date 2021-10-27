@@ -1,7 +1,8 @@
 package com.falcon.falcon.core.security.filter
 
 import com.falcon.falcon.core.entity.User
-import com.falcon.falcon.core.security.JwtFilter
+import com.falcon.falcon.core.enumeration.UserType
+import com.falcon.falcon.core.filter.JwtFilter
 import com.falcon.falcon.core.security.JwtUtils
 import com.falcon.falcon.core.security.UserDetailsImpl
 import com.falcon.falcon.core.usecase.user.FindByUserNameUseCase
@@ -48,7 +49,7 @@ class JwtFilterTest {
             val tokenWithoutBearer = "1234"
             val username = "dummy-username"
             val password = "dummy-password"
-            val user = UserDetailsImpl(User(username, password))
+            val user = UserDetailsImpl(User(username, password, UserType.PERMANENT))
             every { request.getHeader(AUTHORIZATION) } returns token
             every { jwtUtils.getUsernameFromToken(tokenWithoutBearer) } returns username
             every { findByUserNameUse.loadUserByUsername(username) } returns user

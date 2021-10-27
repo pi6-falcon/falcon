@@ -31,8 +31,8 @@ Make sure you have Java SDK 11 installed. Then, you need to set some environment
 export AWS_ACCESS_KEY_ID=<aws-access-key>
 export AWS_SECRET_ACCESS_KEY=<aws-secret-key>
 export AWS_DYNAMO_ENDPOINT=<aws-dynamo-endpoint>
-export SECRET=<jwt-secret>
-export JWT_EXPIRATION=<jwt-expiration>
+export JWT_SECRET=<jwt-secret>
+export JWT_EXPIRATION_IN_HOUR=<jwt-expiration>
 ```
 
 And then you can run the program by running:
@@ -54,6 +54,10 @@ And you are good to go.
 To always continue developing features without any problem, we use Gitflow at this project. In all commit there is a
 trigger to run the tests along with SonarQube validations. Every commit done on the `master` branch triggers the build
 and deploy to AWS.
+
+## Technical Debts
+
+- UTC not implemented
 
 ## Authors
 

@@ -12,5 +12,7 @@ data class RandomShortenUrlRequest(
 fun RandomShortenUrlRequest.toDomain() =
     Url(
         longUrl = this.longUrl!!,
-        type = UrlType.RANDOM
+        type = UrlType.RANDOM,
     )
+
+

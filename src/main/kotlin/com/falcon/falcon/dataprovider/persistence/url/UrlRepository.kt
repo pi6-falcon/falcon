@@ -7,4 +7,8 @@ import org.springframework.data.repository.CrudRepository
 interface UrlRepository : CrudRepository<UrlEntity, String> {
 
     fun findByShortUrl(shortUrl: String): UrlEntity?
+
+    fun findByShortUrlAndUserIdentifier(shortUrl: String, userIdentifier: String): UrlEntity?
+
+    fun findAllByUserIdentifier(userIdentifier: String): List<UrlEntity>
 }

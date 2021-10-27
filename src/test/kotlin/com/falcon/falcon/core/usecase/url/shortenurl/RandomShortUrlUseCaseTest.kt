@@ -1,8 +1,12 @@
 package com.falcon.falcon.core.usecase.url.shortenurl
 
 import com.falcon.falcon.core.entity.Url
+import com.falcon.falcon.core.entity.User
 import com.falcon.falcon.core.enumeration.UrlType
+import com.falcon.falcon.core.enumeration.UserType
+import com.falcon.falcon.core.exception.ShortenUrlLimitExceededException
 import com.falcon.falcon.dataprovider.persistence.url.UrlDataProvider
+import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.matchers.ints.shouldBeExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeTypeOf
@@ -20,7 +24,7 @@ import org.junit.jupiter.api.TestInstance
 class RandomShortUrlUseCaseTest {
 
     private val urlDataProvider: UrlDataProvider = mockk()
-    private val useCase = spyk(RandomShortUrlUseCase(urlDataProvider))
+    private val useCase = spyk(RandomShortUrlUseCase(urlDataProvider, 1))
 
     @BeforeEach
     fun init() {
@@ -35,16 +39,23 @@ class RandomShortUrlUseCaseTest {
             // Given
             val generatedShortUrl = "abcdefg"
             val request = Url(longUrl = "dummy-long-url", type = UrlType.RANDOM)
-            val expectedRequest = Url(longUrl = "dummy-long-url", shortUrl = generatedShortUrl)
-            every { urlDataProvider.urlAlreadyExists(generatedShortUrl) } returns false
+            val user = User("dummy-user", "dummy-password")
+            val expectedRequest = Url(
+                longUrl = "dummy-long-url",
+                shortUrl = generatedShortUrl,
+                userIdentifier = user.username,
+                expirationDate = null
+            )
+
+            every { urlDataProvider.getAllUrlsByUserIdentifier(user.username) } returns emptyList()
+            every { useCase.getUrlCountByUser(user) } returns (user.type.urlLimit - 1).toInt()
             every { urlDataProvider.save(expectedRequest) } returns expectedRequest
-            every { useCase.generateShortUrl() } returns generatedShortUrl
+            every { useCase.generateUniqueShortUrl() } returns generatedShortUrl
             // When
-            val result = useCase.execute(request)
+            val result = useCase.execute(request, user)
             // Then
             verify(exactly = 1) {
-                useCase.generateShortUrl()
-                urlDataProvider.urlAlreadyExists(generatedShortUrl)
+                useCase.generateUniqueShortUrl()
                 urlDataProvider.save(expectedRequest)
             }
 
@@ -56,21 +67,42 @@ class RandomShortUrlUseCaseTest {
             // Given
             val generatedShortUrl = "abcdefg"
             val request = Url(longUrl = "dummy-long-url")
-            val expectedRequest = Url(longUrl = "dummy-long-url", shortUrl = generatedShortUrl, type = UrlType.RANDOM)
-            every { useCase.generateShortUrl() } returns generatedShortUrl
+            val user = User("dummy-user", "dummy-password")
+            val expectedRequest = Url(
+                longUrl = "dummy-long-url",
+                shortUrl = generatedShortUrl,
+                type = UrlType.RANDOM,
+                userIdentifier = user.username,
+                expirationDate = null
+            )
+
+            every { urlDataProvider.getAllUrlsByUserIdentifier(user.username) } returns emptyList()
+            every { useCase.generateUniqueShortUrl() } returns generatedShortUrl
+            every { useCase.getUrlCountByUser(user) } returns (user.type.urlLimit - 1).toInt()
             every { urlDataProvider.urlAlreadyExists(generatedShortUrl) } returns true andThen false
             every { urlDataProvider.save(expectedRequest) } returns expectedRequest
             // When
-            val result = useCase.execute(request)
+            val result = useCase.execute(request, user)
             // Then
-            verify(exactly = 2) {
-                useCase.generateShortUrl()
-                urlDataProvider.urlAlreadyExists(generatedShortUrl)
+            verify(exactly = 1) {
+                useCase.generateUniqueShortUrl()
             }
 
             verify(exactly = 1) { urlDataProvider.save(expectedRequest) }
 
             result.shouldBe(expectedRequest)
+        }
+
+        @Test
+        fun `If user is not allowed it should throw exception`() {
+            // Given
+            val user = User("dummy-username", "dummy-password", type = UserType.TRIAL)
+            val url = Url()
+            every { useCase.getUrlCountByUser(user) } returns (user.type.urlLimit + 1).toInt()
+            // When-Then
+            shouldThrowExactly<ShortenUrlLimitExceededException> {
+                useCase.execute(url, user)
+            }
         }
     }
 
@@ -79,11 +111,29 @@ class RandomShortUrlUseCaseTest {
 
         @Test
         fun `Should returns a 6 (six) length string`() {
+            // Given
+            every { urlDataProvider.urlAlreadyExists(any()) } returns false
             // When
-            val result = useCase.generateShortUrl()
+            val result = useCase.generateUniqueShortUrl()
             // Then
             result.length.shouldBeExactly(6)
             result.shouldBeTypeOf<String>()
+        }
+    }
+
+    @Nested
+    inner class GetUrlCountByUser {
+
+        @Test
+        fun `Should return the size of list as Int`() {
+            // Given
+            val list = listOf(Url(), Url())
+            val user = User("dummy-user", "dummy-password")
+            every { urlDataProvider.getAllUrlsByUserIdentifier(user.username) } returns list
+            // When
+            val result = useCase.getUrlCountByUser(user)
+            // Then
+            result.shouldBe(list.size)
         }
     }
 }
