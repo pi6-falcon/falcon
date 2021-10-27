@@ -16,10 +16,10 @@ data class UrlEntity(
     var userIdentifier: String = "",
     @DynamoDBAttribute(attributeName = "url_type")
     @DynamoDBTypeConvertedEnum
-    val type: UrlType = UrlType.RANDOM,
+    var type: UrlType = UrlType.RANDOM,
     /**
-     * Receives an EPOCH as value
+     * Receives an unix EPOCH as value
      */
-    @DynamoDBAttribute(attributeName = "ttl")
-    var timeToLive: Long? = null,
+    @DynamoDBAttribute(attributeName = "expdate")
+    var expirationDate: Long? = null
 )

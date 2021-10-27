@@ -1,6 +1,7 @@
 package com.falcon.falcon.core.usecase.auth
 
 import com.falcon.falcon.core.entity.User
+import com.falcon.falcon.core.enumeration.UserType
 import com.falcon.falcon.core.exception.InvalidUserCredentialsException
 import com.falcon.falcon.core.exception.UserNotFoundException
 import com.falcon.falcon.dataprovider.persistence.user.UserDataProvider
@@ -35,9 +36,9 @@ class AuthenticateUserTest {
         @Test
         fun `Should return user if it is authenticated successfully`() {
             // Given
-            val request = User("dummy-username", "dummy-password")
-            val response = User("dummy-username", "dummy-password")
-            val expectedResponse = User("dummy-username", "dummy-password")
+            val request = User("dummy-username", "dummy-password", UserType.PERMANENT)
+            val response = User("dummy-username", "dummy-password", UserType.PERMANENT)
+            val expectedResponse = User("dummy-username", "dummy-password", UserType.PERMANENT)
 
             every { bCryptPasswordEncoder.matches(request.password, any()) } returns true
             every { userDataProvider.findByUsername(request.username) } returns response
@@ -51,8 +52,8 @@ class AuthenticateUserTest {
         @Test
         fun `Should throw InvalidUserCredentialsException when credentials does not match`() {
             // Given
-            val request = User("dummy-username", "dummy-password")
-            val response = User("different-username", "different-password")
+            val request = User("dummy-username", "dummy-password", UserType.PERMANENT)
+            val response = User("different-username", "different-password", UserType.PERMANENT)
 
             every { bCryptPasswordEncoder.matches(request.password, any()) } returns false
             every { userDataProvider.findByUsername(request.username) } returns response
@@ -66,7 +67,7 @@ class AuthenticateUserTest {
         @Test
         fun `Should throw UserNotFoundException when dataProvider returns null`() {
             // Given
-            val request = User("dummy-username", "dummy-password")
+            val request = User("dummy-username", "dummy-password", UserType.PERMANENT)
             every { userDataProvider.findByUsername(request.username) } returns null
             // When-Then
             shouldThrowExactly<UserNotFoundException> {

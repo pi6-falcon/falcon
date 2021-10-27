@@ -2,6 +2,7 @@ package com.falcon.falcon.core.exception.resolver
 
 import com.falcon.falcon.core.exception.InvalidUserCredentialsException
 import com.falcon.falcon.core.exception.ShortUrlAlreadyExistsException
+import com.falcon.falcon.core.exception.ShortenUrlLimitExceededException
 import com.falcon.falcon.core.exception.UrlNotFoundException
 import com.falcon.falcon.core.exception.UserAlreadyFoundException
 import com.falcon.falcon.core.exception.UserNotFoundException
@@ -73,6 +74,18 @@ class CoreExceptionResolverTest {
         result.body!!.message.shouldNotBeNull()
         result.body!!.code.shouldBe(HttpStatus.NOT_FOUND.value())
         result.statusCode.shouldBe(HttpStatus.NOT_FOUND)
+        result.body!!.timestamp.shouldNotBeNull()
+        result.body!!.errors.shouldBeEmpty()
+    }
+
+    @Test
+    fun `Should resolve ShortenUrlLimitExceededException and return HttpStatus FORBIDDEN with message`() {
+        // When
+        val result = resolver.resolveShortenUrlLimitExceededException(ShortenUrlLimitExceededException())
+        // Then
+        result.body!!.message.shouldNotBeNull()
+        result.body!!.code.shouldBe(HttpStatus.FORBIDDEN.value())
+        result.statusCode.shouldBe(HttpStatus.FORBIDDEN)
         result.body!!.timestamp.shouldNotBeNull()
         result.body!!.errors.shouldBeEmpty()
     }

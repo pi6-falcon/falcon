@@ -2,6 +2,7 @@ package com.falcon.falcon.entrypoint.rest.auth
 
 import com.falcon.falcon.CreationUtils
 import com.falcon.falcon.core.entity.User
+import com.falcon.falcon.core.enumeration.UserType
 import com.falcon.falcon.core.security.JwtUtils
 import com.falcon.falcon.core.usecase.auth.AuthenticateUseCase
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -43,7 +44,7 @@ class AuthControllerTest {
 
             val request = CreationUtils.buildAuthRequest()
 
-            val executeResponse = User("teste", "123")
+            val executeResponse = User("teste", "123", UserType.PERMANENT)
 
             every { bCrypt.encode(any()) } returns "123"
 

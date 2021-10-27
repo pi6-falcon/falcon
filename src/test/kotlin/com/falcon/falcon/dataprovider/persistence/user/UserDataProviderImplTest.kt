@@ -1,6 +1,7 @@
 package com.falcon.falcon.dataprovider.persistence.user
 
 import com.falcon.falcon.core.entity.User
+import com.falcon.falcon.core.enumeration.UserType
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.nulls.shouldBeNull
@@ -24,9 +25,9 @@ class UserDataProviderImplTest {
         @Test
         fun `Should convert before sending to repository and returning`() {
             // Given
-            val request = User("dummy-user", "dummy-password")
-            val expectedRequest = UserEntity("dummy-user", "dummy-password")
-            val expectedResponse = User("dummy-user", "dummy-password")
+            val request = User("dummy-user", "dummy-password", UserType.PERMANENT)
+            val expectedRequest = UserEntity("dummy-user", "dummy-password", UserType.PERMANENT)
+            val expectedResponse = User("dummy-user", "dummy-password", UserType.PERMANENT)
             every { userRepository.save(expectedRequest) } returns expectedRequest
             // When
             val result = userDataProvider.save(request)
@@ -43,8 +44,8 @@ class UserDataProviderImplTest {
         fun `Should return user successfully`() {
             // Given
             val username = "dummy-username"
-            val response = UserEntity(username, "dummy-password")
-            val expectedResponse = User(username, "dummy-password")
+            val response = UserEntity(username, "dummy-password", UserType.PERMANENT)
+            val expectedResponse = User(username, "dummy-password", UserType.PERMANENT)
             every { userRepository.findByUsername(username) } returns response
             // When
             val result = userDataProvider.findByUsername(username)
@@ -71,7 +72,7 @@ class UserDataProviderImplTest {
         @Test
         fun `Should return true if user is already created`() {
             // Given
-            val request = User("dummy-username", "dummy-password")
+            val request = User("dummy-username", "dummy-password", UserType.PERMANENT)
             every { userRepository.existsById(request.username) } returns true
             // When
             val result = userDataProvider.isUserAlreadyCreated(request)
@@ -82,7 +83,7 @@ class UserDataProviderImplTest {
         @Test
         fun `Should return false if user isnt created`() {
             // Given
-            val request = User("dummy-username", "dummy-password")
+            val request = User("dummy-username", "dummy-password", UserType.PERMANENT)
             every { userRepository.existsById(request.username) } returns false
             // When
             val result = userDataProvider.isUserAlreadyCreated(request)

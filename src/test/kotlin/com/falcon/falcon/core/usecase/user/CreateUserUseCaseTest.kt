@@ -1,6 +1,7 @@
 package com.falcon.falcon.core.usecase.user
 
 import com.falcon.falcon.core.entity.User
+import com.falcon.falcon.core.enumeration.UserType
 import com.falcon.falcon.core.exception.UserAlreadyFoundException
 import com.falcon.falcon.dataprovider.persistence.user.UserDataProvider
 import io.kotest.assertions.throwables.shouldThrowExactly
@@ -20,7 +21,7 @@ class CreateUserUseCaseTest {
 
     private val userDataProvider: UserDataProvider = mockk()
     private val bCryptPasswordEncoder: BCryptPasswordEncoder = mockk()
-    private val useCase: CreateUserUseCase = CreateUserUseCase(userDataProvider, bCryptPasswordEncoder)
+    private val useCase: CreateUserUseCase = CreateUserUseCaseImpl(userDataProvider, bCryptPasswordEncoder)
 
     @BeforeEach
     fun init() {
@@ -36,8 +37,8 @@ class CreateUserUseCaseTest {
             val username = "dummy-username"
             val password = "dummy-password"
             val encryptedPassword = "encrypted-dummy-password"
-            val request = User(username, password)
-            val expectedUser = User(username, encryptedPassword)
+            val request = User(username, password, UserType.PERMANENT)
+            val expectedUser = User(username, encryptedPassword, UserType.PERMANENT)
             every { userDataProvider.isUserAlreadyCreated(request) } returns false
             every { userDataProvider.save(expectedUser) } returns expectedUser
             every { bCryptPasswordEncoder.encode(password) } returns encryptedPassword
@@ -55,7 +56,7 @@ class CreateUserUseCaseTest {
         @Test
         fun `Should return UserAlreadyFoundException if user already exists`() {
             // Given
-            val request = User("dummy-username", "dummy-password")
+            val request = User("dummy-username", "dummy-password", UserType.PERMANENT)
             every { userDataProvider.isUserAlreadyCreated(request) } returns true
             // When-Then
             shouldThrowExactly<UserAlreadyFoundException> {

@@ -17,5 +17,6 @@ fun CustomShortenUrlRequest.toDomain() =
     Url(
         shortUrl = this.customUrl!!,
         longUrl = longUrl!!,
-        type = UrlType.CUSTOM
+        type = UrlType.CUSTOM,
+        expirationDate = null,
     )

@@ -1,6 +1,7 @@
 package com.falcon.falcon.core.usecase.url.deleteshortenurl
 
 import com.falcon.falcon.core.entity.Url
+import com.falcon.falcon.core.entity.User
 import com.falcon.falcon.core.enumeration.UrlType
 import com.falcon.falcon.core.exception.UrlNotFoundException
 import com.falcon.falcon.dataprovider.persistence.url.UrlDataProvider
@@ -35,16 +36,16 @@ class DeleteShortUrlUseCaseTest {
             // Given
             val shortUrl = "dummy-short-url"
             val longUrl = "dummy-long-url"
-            val user = "dummy-user"
+            val user = User("dummy-user", "dummy-password")
             val urlType = UrlType.CUSTOM
-            val response = Url(shortUrl, longUrl, user, urlType)
-            every { urlDataProvider.getByShortUrl(shortUrl) } returns response
+            val response = Url(shortUrl, longUrl, user.username, urlType)
+            every { urlDataProvider.getByShortUrlAndUserIdentifier(shortUrl, user.username) } returns response
             justRun { urlDataProvider.delete(response) }
             // When
-            val result = useCase.execute(shortUrl)
+            val result = useCase.execute(shortUrl, user)
             // Then
             verify(exactly = 1) {
-                urlDataProvider.getByShortUrl(shortUrl)
+                urlDataProvider.getByShortUrlAndUserIdentifier(shortUrl, user.username)
                 urlDataProvider.delete(response)
             }
             result.shouldBeTypeOf<Unit>()
@@ -54,10 +55,11 @@ class DeleteShortUrlUseCaseTest {
         fun `Should throw UrlNotFoundException if URL does not exist`() {
             // Given
             val shortUrl = "dummy-short-url"
-            every { urlDataProvider.getByShortUrl(shortUrl) } returns null
+            val user = User("dummy-user", "dummy-password")
+            every { urlDataProvider.getByShortUrlAndUserIdentifier(shortUrl, user.username) } returns null
             // When-Then
             shouldThrowExactly<UrlNotFoundException> {
-                useCase.execute(shortUrl)
+                useCase.execute(shortUrl, user)
             }
         }
     }

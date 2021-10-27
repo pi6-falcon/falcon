@@ -1,6 +1,7 @@
 package com.falcon.falcon.core.usecase.url.shortenurl
 
 import com.falcon.falcon.core.entity.Url
+import com.falcon.falcon.core.entity.User
 import com.falcon.falcon.core.enumeration.UrlType
 import com.falcon.falcon.core.exception.ShortUrlAlreadyExistsException
 import com.falcon.falcon.dataprovider.persistence.url.UrlDataProvider
@@ -35,14 +36,17 @@ class CustomShortUrlUseCaseTest {
             val customUrl = "this-is-the-custom-url"
             val longUrl = "dummy-long-url"
             val request = Url(shortUrl = customUrl, longUrl = longUrl, type = UrlType.CUSTOM)
-            val expectedRequest = Url(shortUrl = customUrl, longUrl = longUrl, type = UrlType.CUSTOM)
+            val user = User("dummy-user", "dummy-password")
+            val expectedRequest = Url(shortUrl = customUrl, longUrl = longUrl, type = UrlType.CUSTOM, userIdentifier = user.username, expirationDate = null)
             every { urlDataProvider.urlAlreadyExists(customUrl) } returns false
             every { urlDataProvider.save(expectedRequest) } returns expectedRequest
+            every { urlDataProvider.getAllUrlsByUserIdentifier(user.username) } returns emptyList()
             // When
-            val result = useCase.execute(request)
+            val result = useCase.execute(request, user)
             // Then
             verify(exactly = 1) {
                 urlDataProvider.urlAlreadyExists(customUrl)
+                urlDataProvider.getAllUrlsByUserIdentifier(user.username)
                 urlDataProvider.save(expectedRequest)
             }
 
@@ -55,10 +59,11 @@ class CustomShortUrlUseCaseTest {
             val customUrl = "this-is-the-custom-url"
             val longUrl = "dummy-long-url"
             val request = Url(shortUrl = customUrl, longUrl = longUrl, type = UrlType.CUSTOM)
+            val user = User("dummy-user", "dummy-password")
             every { urlDataProvider.urlAlreadyExists(customUrl) } returns true
             // When-Then
             shouldThrowExactly<ShortUrlAlreadyExistsException> {
-                useCase.execute(request)
+                useCase.execute(request, user)
             }
         }
     }

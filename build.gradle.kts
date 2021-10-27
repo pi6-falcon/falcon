@@ -14,7 +14,7 @@ jacoco {
 }
 
 group = "com.falcon"
-version = "3.0.0"
+version = "4.0.0"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
@@ -80,13 +80,16 @@ tasks.withType<JacocoReport> {
         classDirectories.setFrom(files(classDirectories.files.map {
             fileTree(it).apply {
                 // Main class
-                exclude("**/falcon/*.*")
-                // Configuration classes
-//                exclude("**/falcon/configuration/**")
-                // Exception classes
-//                exclude("**/falcon/common/exception/resolver/**.*")
-                // Log class (Kotlin compatibility)
-                exclude("**/*log*.class")
+                exclude(
+                    // Root (main)
+                    "**/falcon/*.*",
+                    // Utils
+                    "**/MutableHttpServletRequest.*",
+                    // Log class
+                    "**/*log*.class",
+                    "**/*Entity*.class",
+                    "**/configuration/**"
+                )
             }
         }))
     }

@@ -1,5 +1,6 @@
-package com.falcon.falcon.core.security
+package com.falcon.falcon.core.filter
 
+import com.falcon.falcon.core.security.JwtUtils
 import com.falcon.falcon.core.usecase.user.FindByUserNameUseCase
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
@@ -20,8 +21,8 @@ class JwtFilter(private val jwtUtils: JwtUtils, private val findByUserNameUseCas
         request.getHeader(AUTHORIZATION)?.extractToken()?.let { token ->
             jwtUtils.getUsernameFromToken(token)?.let { username ->
                 val user = findByUserNameUseCase.loadUserByUsername(username)
-
-                SecurityContextHolder.getContext().authentication = UsernamePasswordAuthenticationToken(user, null, user.authorities)
+                SecurityContextHolder.getContext().authentication =
+                    UsernamePasswordAuthenticationToken(user, token, user.authorities)
             }
         }
 
@@ -30,8 +31,10 @@ class JwtFilter(private val jwtUtils: JwtUtils, private val findByUserNameUseCas
 }
 
 /**
- * Extract the JWT token from the header AUTHORIZATION.
- * Returns null if JWT is invalid or null/empty.
+ * Extension function responsible to extract the JWT token from the header AUTHORIZATION.
+ *
+ * @param String is the string itself "myString.extractToken()".
+ * @return is the token already split, or null if none/invalid
  */
 private fun String.extractToken(): String? {
     if (!this.startsWith("Bearer")) {
@@ -40,3 +43,4 @@ private fun String.extractToken(): String? {
     // e.g Bearer 1234token
     return this.split(" ")[1]
 }
+
