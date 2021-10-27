@@ -1,10 +1,10 @@
-  server:
-  port: 8080
-  error:
-    include-message: always
-    include-binding-errors: always
-    include-exception: false
-    include-stacktrace: on_param
+server:
+port: 8080
+error:
+  include-message: always
+  include-binding-errors: always
+  include-exception: false
+  include-stacktrace: on_param
 
 api:
   jwt:
