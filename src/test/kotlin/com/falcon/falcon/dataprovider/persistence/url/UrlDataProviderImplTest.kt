@@ -4,6 +4,7 @@ import com.falcon.falcon.core.entity.Url
 import com.falcon.falcon.core.enumeration.UrlType
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeTypeOf
 import io.mockk.clearAllMocks
@@ -123,6 +124,68 @@ class UrlDataProviderImplTest {
             // Then
             verify(exactly = 1) { repository.findByShortUrl(shortUrl) }
             result.shouldBe(null)
+        }
+    }
+
+    @Nested
+    inner class GetByShortUrlAndUserIdentifier {
+
+        @Test
+        fun `Should return null if url and user exist`() {
+            // Given
+            val shortUrl = "dummy-url"
+            val userIdentifier = "test"
+            val urlEntity = UrlEntity("", "", "", UrlType.RANDOM, 1)
+            every { repository.findByShortUrlAndUserIdentifier(shortUrl, userIdentifier) } returns urlEntity
+            // When
+            val result = provider.getByShortUrlAndUserIdentifier(shortUrl, userIdentifier)
+            // Then
+            verify(exactly = 1) { repository.findByShortUrlAndUserIdentifier(shortUrl, userIdentifier) }
+            result.shouldNotBeNull()
+        }
+
+        @Test
+        fun `Should return null if url and user does not exist`() {
+            // Given
+            val shortUrl = "dummy-url"
+            val userIdentifier = "test"
+            every { repository.findByShortUrlAndUserIdentifier(shortUrl, userIdentifier) } returns null
+            // When
+            val result = provider.getByShortUrlAndUserIdentifier(shortUrl, userIdentifier)
+            // Then
+            verify(exactly = 1) { repository.findByShortUrlAndUserIdentifier(shortUrl, userIdentifier) }
+            result.shouldBe(null)
+        }
+
+        @Nested
+        inner class GetAllUrlsByUserIdentifier {
+
+            @Test
+            fun `Should return null if user exist`() {
+                // Given
+                val userIdentifier = "test"
+                val urlEntity = UrlEntity("", "", "", UrlType.RANDOM, 1)
+                val list = listOf(urlEntity)
+
+                every { repository.findAllByUserIdentifier(userIdentifier) } returns list
+                // When
+                val result = provider.getAllUrlsByUserIdentifier(userIdentifier)
+                // Then
+                verify(exactly = 1) { repository.findAllByUserIdentifier(userIdentifier) }
+                result.shouldNotBeNull()
+            }
+
+            @Test
+            fun `Should return null if user does not exist`() {
+                // Given
+                val userIdentifier = "test"
+                every { repository.findAllByUserIdentifier(userIdentifier) } returns emptyList()
+                // When
+                val result = provider.getAllUrlsByUserIdentifier(userIdentifier)
+                // Then
+                verify(exactly = 1) { repository.findAllByUserIdentifier(userIdentifier) }
+                result.size.shouldBe(0)
+            }
         }
     }
 }

@@ -87,6 +87,8 @@ tasks.withType<JacocoReport> {
                     "**/MutableHttpServletRequest.*",
                     // Log class
                     "**/*log*.class",
+                    "**/*Entity*.class",
+                    "**/configuration/**"
                 )
             }
         }))

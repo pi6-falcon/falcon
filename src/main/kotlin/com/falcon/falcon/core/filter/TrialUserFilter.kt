@@ -2,19 +2,18 @@ package com.falcon.falcon.core.filter
 
 import com.falcon.falcon.core.usecase.trial.CreateTrialToken
 import com.falcon.falcon.core.usecase.trial.CreateTrialUser
+import mu.KotlinLogging
+import org.springframework.http.HttpHeaders.AUTHORIZATION
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher
+import org.springframework.security.web.util.matcher.RequestMatcher
+import org.springframework.stereotype.Component
+import org.springframework.web.filter.OncePerRequestFilter
 import java.util.Collections
 import java.util.Enumeration
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletRequestWrapper
 import javax.servlet.http.HttpServletResponse
-import mu.KotlinLogging
-import org.springframework.core.annotation.Order
-import org.springframework.http.HttpHeaders.AUTHORIZATION
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher
-import org.springframework.security.web.util.matcher.RequestMatcher
-import org.springframework.stereotype.Component
-import org.springframework.web.filter.OncePerRequestFilter
 
 @Component
 class TrialUserFilter(
@@ -25,7 +24,7 @@ class TrialUserFilter(
     private val log = KotlinLogging.logger {}
     private val temporaryUserHeader = "Temporary-User"
     private val temporaryUserHeaderAuth = "Temporary-User-Auth"
-    private val createUrlPath: RequestMatcher = AntPathRequestMatcher("/url", "POST")
+    val createUrlPath: RequestMatcher = AntPathRequestMatcher("/url", "POST")
 
     override fun shouldNotFilter(request: HttpServletRequest): Boolean = !createUrlPath.matches(request)
 
