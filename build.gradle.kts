@@ -14,7 +14,7 @@ jacoco {
 }
 
 group = "com.falcon"
-version = "3.0.0"
+version = "4.0.0"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
