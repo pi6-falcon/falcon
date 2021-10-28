@@ -13,9 +13,8 @@ sealed interface UrlRedirectHistoryUseCase {
 }
 
 @Service
-class UrlRedirectHistoryUseCaseImpl(
-   private val dataProvider: UrlHistoryRedirectDataProvider
-) : UrlRedirectHistoryUseCase {
+class UrlRedirectHistoryUseCaseImpl(private val dataProvider: UrlHistoryRedirectDataProvider) :
+    UrlRedirectHistoryUseCase {
 
     override suspend operator fun invoke(urlShort: String, from: String) {
         dataProvider.saveAccess(UrlRedirectHistory(urlShort, from, LocalDateTime.now()))

@@ -2,6 +2,7 @@ package com.falcon.falcon.dataprovider.persistence.urlredirecthistory
 
 import com.falcon.falcon.core.entity.UrlRedirectHistory
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 interface UrlHistoryRedirectDataProvider {
     fun getListOfAccess(shortUrl: String): List<UrlRedirectHistory>
@@ -10,7 +11,7 @@ interface UrlHistoryRedirectDataProvider {
 }
 
 @Service
-class UrlRedirectHistoryImpl(private val repository: UrlRedirectHistoryRepository): UrlHistoryRedirectDataProvider {
+class UrlRedirectHistoryImpl(private val repository: UrlRedirectHistoryRepository) : UrlHistoryRedirectDataProvider {
 
     override fun getListOfAccess(shortUrl: String): List<UrlRedirectHistory> =
         repository.findAllByShortUrl(shortUrl).map { it.toCoreEntity() }
@@ -21,13 +22,13 @@ class UrlRedirectHistoryImpl(private val repository: UrlRedirectHistoryRepositor
 }
 
 private fun UrlRedirectHistoryEntity.toCoreEntity(): UrlRedirectHistory = UrlRedirectHistory(
-    shortUrl    = this.shortUrl,
-    from        = this.from,
-    date        = this.date
+    shortUrl = this.shortUrl,
+    from = this.from,
+    date = LocalDateTime.parse(this.date)
 )
 
 private fun UrlRedirectHistory.toDatabaseEntity(): UrlRedirectHistoryEntity = UrlRedirectHistoryEntity(
-    shortUrl    = this.shortUrl,
-    from        = this.from,
-    date        = this.date
+    shortUrl = this.shortUrl,
+    from = this.from,
+    date = date.toString()
 )
