@@ -6,15 +6,13 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable
 import java.util.UUID
 
 @DynamoDBTable(tableName = "redirect_history")
-class UrlRedirectHistoryEntity(
+data class UrlRedirectHistoryEntity(
     @DynamoDBHashKey(attributeName = "id")
-    val id: UUID = UUID.randomUUID(),
+    var id: UUID = UUID.randomUUID(),
     @DynamoDBAttribute(attributeName = "short_url")
-    val shortUrl: String,
+    var shortUrl: String = "",
     @DynamoDBAttribute(attributeName = "from")
-    val from: String,
+    var from: String = "",
     @DynamoDBAttribute(attributeName = "date")
-    val date: String,
-) {
-
-}
+    var date: String = "",
+)
