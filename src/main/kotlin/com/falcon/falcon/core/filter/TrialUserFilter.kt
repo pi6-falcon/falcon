@@ -24,7 +24,7 @@ class TrialUserFilter(
     private val log = KotlinLogging.logger {}
     private val temporaryUserHeader = "Temporary-User"
     private val temporaryUserHeaderAuth = "Temporary-User-Auth"
-    val createUrlPath: RequestMatcher = AntPathRequestMatcher("/url", "POST")
+    val createUrlPath: RequestMatcher = AntPathRequestMatcher("/api/url", "POST")
 
     override fun shouldNotFilter(request: HttpServletRequest): Boolean = !createUrlPath.matches(request)
 

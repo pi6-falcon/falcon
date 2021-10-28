@@ -38,6 +38,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.5")
     implementation("commons-validator:commons-validator:1.7")
     implementation("org.springframework.cloud:spring-cloud-starter-sleuth:3.0.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
     // Storage
     implementation("com.github.derjust:spring-data-dynamodb:5.1.0")
     // Swagger
