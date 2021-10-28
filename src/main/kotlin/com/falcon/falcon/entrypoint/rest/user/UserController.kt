@@ -2,16 +2,16 @@ package com.falcon.falcon.entrypoint.rest.user
 
 import com.falcon.falcon.core.entity.User
 import com.falcon.falcon.core.usecase.user.CreateUserUseCase
-import javax.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import javax.validation.Valid
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 class UserController(
     private val createUserUseCase: CreateUserUseCase,
 ) {

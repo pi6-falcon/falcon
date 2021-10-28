@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 class AuthController(
     private val authUseCase: AuthenticateUseCase,
     private val jwtUtils: JwtUtils,
