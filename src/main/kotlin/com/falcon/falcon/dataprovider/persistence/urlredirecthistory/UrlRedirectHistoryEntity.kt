@@ -6,7 +6,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable
 import java.time.LocalDateTime
 
 @DynamoDBTable(tableName = "redirect_history")
-data class UrlRedirectHistory(
+data class UrlRedirectHistoryEntity(
     @DynamoDBHashKey(attributeName = "short_url")
     val shortUrl: String,
     @DynamoDBAttribute(attributeName = "from")
