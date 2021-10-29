@@ -25,13 +25,9 @@ class UrlRedirectUseCaseImpl(
 
     override fun invoke(request: String, from: HttpServletRequest): String =
         urlDataProvider.getByShortUrl(request)?.let {
-            log.info { "starting request with $request and url ${from.requestURL}" }
             GlobalScope.launch {
-                log.info { "enter async" }
                 saveHistory(it.shortUrl, from.remoteAddr)
-                log.info { "finish inside async" }
             }
-            log.info { "finish outside async" }
 
             "redirect:${it.longUrl}"
         } ?: throw UrlNotFoundException()

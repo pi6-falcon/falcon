@@ -8,16 +8,13 @@ import com.falcon.falcon.core.enumeration.UrlType
 import com.falcon.falcon.core.security.UserDetailsImpl
 import com.falcon.falcon.core.usecase.url.deleteshortenurl.DeleteShortenedUrl
 import com.falcon.falcon.core.usecase.url.shortenurl.UrlShortener
+import com.falcon.falcon.core.usecase.urlredirect.history.UrlRedirectHistoryUseCase
 import com.falcon.falcon.validate
 import io.kotest.matchers.ints.shouldBeExactly
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeTypeOf
-import io.mockk.clearAllMocks
-import io.mockk.every
-import io.mockk.justRun
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -31,15 +28,23 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import java.util.stream.Stream
+import javax.servlet.http.HttpServletRequest
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UrlControllerTest {
 
     private val randomShortUrlUseCase: UrlShortener = mockk()
     private val customShortUrlUseCase: UrlShortener = mockk()
+    private val urlRedirectHistoryUseCase: UrlRedirectHistoryUseCase = mockk()
+    private val servletRequest: HttpServletRequest = spyk()
     private val deleteShortenedUrlUseCase: DeleteShortenedUrl = mockk()
     private val authentication: Authentication = mockk()
-    private val controller = UrlController(randomShortUrlUseCase, customShortUrlUseCase, deleteShortenedUrlUseCase)
+    private val controller = UrlController(
+        randomShortUrlUseCase,
+        customShortUrlUseCase,
+        deleteShortenedUrlUseCase,
+        urlRedirectHistoryUseCase
+    )
 
     @BeforeEach
     fun init() {
@@ -57,14 +62,21 @@ class UrlControllerTest {
             val expectedRequest = Url(longUrl = request.longUrl!!, type = UrlType.RANDOM, expirationDate = null)
             val expectedResponse = CreationUtils.buildShortenUrlResponse()
 
-            every { randomShortUrlUseCase.execute(expectedRequest, user) } returns Url(shortUrl = expectedResponse.shortUrl)
+            every {
+                randomShortUrlUseCase.execute(
+                    expectedRequest,
+                    user
+                )
+            } returns Url(shortUrl = expectedResponse.shortUrl)
             every { authentication.principal } returns UserDetailsImpl(user)
+            every { servletRequest.requestURL } returns StringBuffer("dummy")
+            every { servletRequest.requestURI } returns "dummy"
             // When
-            val result = controller.shortenToRandomUrl(request, authentication)
+            val result = controller.shortenToRandomUrl(request, authentication, servletRequest)
             // Then
             verify(exactly = 1) { randomShortUrlUseCase.execute(request.toDomain(), user) }
             result.statusCode.shouldBe(HttpStatus.CREATED)
-            result.body!!.shortUrl.shouldBe(expectedResponse.shortUrl)
+            result.body!!.shortUrl.shouldBe("/${expectedResponse.shortUrl}")
             result.shouldBeTypeOf<ResponseEntity<ShortenUrlResponse>>()
         }
     }
@@ -76,17 +88,21 @@ class UrlControllerTest {
         fun `Should convert then return ResponseEntity of ShortenUrlResponse with HttpStatus CREATED`() {
             // Given
             val request = CreationUtils.buildCustomShortenUrlRequest()
-            val expectedRequest = Url(shortUrl = request.customUrl!!, longUrl = request.longUrl!!, type = UrlType.CUSTOM)
+            val expectedRequest =
+                Url(shortUrl = request.customUrl!!, longUrl = request.longUrl!!, type = UrlType.CUSTOM)
             val expectedResponse = CreationUtils.buildShortenUrlResponse()
             val user = User("dummy-username", "dummy-password")
-            every { customShortUrlUseCase.execute(expectedRequest, user) } returns Url(shortUrl = expectedResponse.shortUrl)
+            every { customShortUrlUseCase.execute(expectedRequest, user) } returns
+                    Url(shortUrl = expectedResponse.shortUrl)
             every { authentication.principal } returns UserDetailsImpl(user)
+            every { servletRequest.requestURL } returns StringBuffer("dummy")
+            every { servletRequest.requestURI } returns "dummy"
             // When
-            val result = controller.shortenToCustomUrl(request, authentication)
+            val result = controller.shortenToCustomUrl(request, authentication, servletRequest)
             // Then
             verify(exactly = 1) { customShortUrlUseCase.execute(request.toDomain(), user) }
             result.statusCode.shouldBe(HttpStatus.CREATED)
-            result.body!!.shortUrl.shouldBe(expectedResponse.shortUrl)
+            result.body!!.shortUrl.shouldBe("/${expectedResponse.shortUrl}")
             result.shouldBeTypeOf<ResponseEntity<ShortenUrlResponse>>()
         }
     }
@@ -134,7 +150,12 @@ private class RandomShortenUrlRequestProvider : ArgumentsProvider {
             Arguments.of(ValidateBeans(CreationUtils.buildRandomShortenUrlRequest(longUrl = null), 1)),
             Arguments.of(ValidateBeans(CreationUtils.buildRandomShortenUrlRequest(longUrl = ""), 1)),
             Arguments.of(ValidateBeans(CreationUtils.buildRandomShortenUrlRequest(longUrl = "   "), 1)),
-            Arguments.of(ValidateBeans(CreationUtils.buildRandomShortenUrlRequest(longUrl = "invalid-url"), 0)), // Invalid URLs are being validated on core layer!
+            Arguments.of(
+                ValidateBeans(
+                    CreationUtils.buildRandomShortenUrlRequest(longUrl = "invalid-url"),
+                    0
+                )
+            ), // Invalid URLs are being validated on core layer!
         )
 }
 
@@ -142,14 +163,38 @@ private class CustomShortenUrlRequestProvider : ArgumentsProvider {
 
     override fun provideArguments(context: ExtensionContext?): Stream<out Arguments>? =
         Stream.of(
-            Arguments.of(ValidateBeans(CreationUtils.buildCustomShortenUrlRequest("https://www.google.com.br", "random-url"), 0)),
+            Arguments.of(
+                ValidateBeans(
+                    CreationUtils.buildCustomShortenUrlRequest(
+                        "https://www.google.com.br",
+                        "random-url"
+                    ), 0
+                )
+            ),
             Arguments.of(ValidateBeans(CreationUtils.buildCustomShortenUrlRequest(null, "random-url"), 1)),
-            Arguments.of(ValidateBeans(CreationUtils.buildCustomShortenUrlRequest("https://www.google.com.br", null), 1)),
+            Arguments.of(
+                ValidateBeans(
+                    CreationUtils.buildCustomShortenUrlRequest("https://www.google.com.br", null),
+                    1
+                )
+            ),
             Arguments.of(ValidateBeans(CreationUtils.buildCustomShortenUrlRequest(null, null), 2)),
             Arguments.of(ValidateBeans(CreationUtils.buildCustomShortenUrlRequest("", ""), 3)),
             Arguments.of(ValidateBeans(CreationUtils.buildCustomShortenUrlRequest("   ", "     "), 2)),
-            Arguments.of(ValidateBeans(CreationUtils.buildCustomShortenUrlRequest("https://www.google.com.br", "a"), 1)), // min
-            Arguments.of(ValidateBeans(CreationUtils.buildCustomShortenUrlRequest("https://www.google.com.br", "this-url-have-more-than-20-characters"), 1)), // max
+            Arguments.of(
+                ValidateBeans(
+                    CreationUtils.buildCustomShortenUrlRequest("https://www.google.com.br", "a"),
+                    1
+                )
+            ), // min
+            Arguments.of(
+                ValidateBeans(
+                    CreationUtils.buildCustomShortenUrlRequest(
+                        "https://www.google.com.br",
+                        "this-url-have-more-than-20-characters"
+                    ), 1
+                )
+            ), // max
         )
 }
 

@@ -9,7 +9,7 @@ sealed interface UrlRedirectHistoryUseCase {
 
     suspend operator fun invoke(urlShort: String, from: String)
 
-    fun getAccess(urlShort: String): List<UrlRedirectHistory>
+    fun getRedirectHistory(urlShort: String): List<UrlRedirectHistory>
 }
 
 @Service
@@ -20,6 +20,6 @@ class UrlRedirectHistoryUseCaseImpl(private val dataProvider: UrlHistoryRedirect
         dataProvider.saveAccess(UrlRedirectHistory(urlShort, from, LocalDateTime.now()))
     }
 
-    override fun getAccess(urlShort: String): List<UrlRedirectHistory> =
-        dataProvider.getListOfAccess(urlShort)
+    override fun getRedirectHistory(urlShort: String): List<UrlRedirectHistory> =
+        dataProvider.getRedirects(urlShort)
 }
