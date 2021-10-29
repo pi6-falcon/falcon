@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
 interface UrlHistoryRedirectDataProvider {
-    fun getListOfAccess(shortUrl: String): List<UrlRedirectHistory>
+    fun getRedirects(shortUrl: String): List<UrlRedirectHistory>
 
     fun saveAccess(urlRedirectHistory: UrlRedirectHistory)
 }
@@ -13,7 +13,7 @@ interface UrlHistoryRedirectDataProvider {
 @Service
 class UrlRedirectHistoryImpl(private val repository: UrlRedirectHistoryRepository) : UrlHistoryRedirectDataProvider {
 
-    override fun getListOfAccess(shortUrl: String): List<UrlRedirectHistory> =
+    override fun getRedirects(shortUrl: String): List<UrlRedirectHistory> =
         repository.findAllByShortUrl(shortUrl).map { it.toCoreEntity() }
 
     override fun saveAccess(urlRedirectHistory: UrlRedirectHistory) {
