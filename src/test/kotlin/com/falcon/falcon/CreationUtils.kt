@@ -1,11 +1,11 @@
 package com.falcon.falcon
 
 import com.falcon.falcon.entrypoint.rest.auth.AuthRequest
-import com.falcon.falcon.entrypoint.rest.auth.AuthResponse
 import com.falcon.falcon.entrypoint.rest.url.CustomShortenUrlRequest
 import com.falcon.falcon.entrypoint.rest.url.RandomShortenUrlRequest
 import com.falcon.falcon.entrypoint.rest.url.ShortenUrlResponse
 import com.falcon.falcon.entrypoint.rest.user.UserRequest
+import com.fasterxml.jackson.databind.ObjectMapper
 
 class CreationUtils {
     companion object {
@@ -27,3 +27,7 @@ class CreationUtils {
 
     }
 }
+
+
+fun Any.asString() = ObjectMapper().writeValueAsString(this)
+
