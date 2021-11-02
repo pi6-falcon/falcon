@@ -3,10 +3,10 @@ package com.falcon.falcon.core.security
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
-import java.util.Date
-import java.util.concurrent.TimeUnit
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import java.util.Date
+import java.util.concurrent.TimeUnit
 
 @Component
 class JwtUtils(

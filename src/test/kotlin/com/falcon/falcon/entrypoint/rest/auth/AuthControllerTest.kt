@@ -61,5 +61,18 @@ class AuthControllerTest {
             result.shouldBeTypeOf<ResponseEntity<AuthResponse>>()
 
         }
+
+        @Test
+        fun `Get new token by refresh`() {
+
+            every { jwtUtils.getUsernameFromToken(any()) } returns "test"
+
+            every { jwtUtils.generateToken(any(), null) } returns "token"
+
+            val result = authController.refreshToken("Bearer test")
+
+            result.statusCode.shouldBe(HttpStatus.OK)
+            result.shouldNotBeNull()
+        }
     }
 }

@@ -5,5 +5,7 @@ import java.time.LocalDateTime
 data class UrlRedirectHistory(
     val shortUrl: String,
     val from: String,
-    val date: LocalDateTime,
+    val city: String,
+    val country: String,
+    val date: LocalDateTime
 )

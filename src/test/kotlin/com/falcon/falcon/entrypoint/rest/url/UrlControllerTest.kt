@@ -6,10 +6,12 @@ import com.falcon.falcon.core.entity.Url
 import com.falcon.falcon.core.entity.User
 import com.falcon.falcon.core.enumeration.UrlType
 import com.falcon.falcon.core.security.UserDetailsImpl
+import com.falcon.falcon.core.usecase.url.GetUserUrlsUseCase
 import com.falcon.falcon.core.usecase.url.deleteshortenurl.DeleteShortenedUrl
 import com.falcon.falcon.core.usecase.url.shortenurl.UrlShortener
 import com.falcon.falcon.core.usecase.urlredirect.history.UrlRedirectHistoryUseCase
 import com.falcon.falcon.validate
+import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.ints.shouldBeExactly
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
@@ -27,6 +29,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
+import java.time.Instant
 import java.util.stream.Stream
 import javax.servlet.http.HttpServletRequest
 
@@ -35,6 +38,7 @@ class UrlControllerTest {
 
     private val randomShortUrlUseCase: UrlShortener = mockk()
     private val customShortUrlUseCase: UrlShortener = mockk()
+    private val getUserUrlsUseCase: GetUserUrlsUseCase = mockk()
     private val urlRedirectHistoryUseCase: UrlRedirectHistoryUseCase = mockk()
     private val servletRequest: HttpServletRequest = spyk()
     private val deleteShortenedUrlUseCase: DeleteShortenedUrl = mockk()
@@ -43,7 +47,8 @@ class UrlControllerTest {
         randomShortUrlUseCase,
         customShortUrlUseCase,
         deleteShortenedUrlUseCase,
-        urlRedirectHistoryUseCase
+        urlRedirectHistoryUseCase,
+        getUserUrlsUseCase
     )
 
     @BeforeEach
@@ -125,6 +130,39 @@ class UrlControllerTest {
             result.body.shouldBeNull()
             result.shouldBeTypeOf<ResponseEntity<Void>>()
         }
+    }
+
+    @Nested
+    inner class GetUrlsByUsername {
+
+        @Test
+        fun `Get empty list of urls by token valid`() {
+            val user = User("dummy-username", "dummy-password")
+
+            every { authentication.principal } returns UserDetailsImpl(user)
+            every { getUserUrlsUseCase(any()) } returns emptyList()
+
+            val result = controller.getUrlByUser(authentication, servletRequest)
+
+            verify(exactly = 1) {getUserUrlsUseCase.invoke(any())}
+            result.statusCode.shouldBe(HttpStatus.OK)
+            result.body.shouldBeEmpty()
+        }
+
+        @Test
+        fun `Get list of urls by token valid`() {
+            val user = User("dummy-username", "dummy-password")
+
+            every { authentication.principal } returns UserDetailsImpl(user)
+            every { getUserUrlsUseCase(any()) } returns arrayListOf(Url("test","test","test", UrlType.RANDOM, Instant.now()))
+
+            val result = controller.getUrlByUser(authentication, servletRequest)
+
+            verify(exactly = 1) {getUserUrlsUseCase.invoke(any())}
+            result.statusCode.shouldBe(HttpStatus.OK)
+            result.body!!.size.shouldBe(1)
+        }
+
     }
 
     @ParameterizedTest
