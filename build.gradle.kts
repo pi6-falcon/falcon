@@ -14,7 +14,7 @@ jacoco {
 }
 
 group = "com.falcon"
-version = "5.0.0"
+version = "6.0.0"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
@@ -51,8 +51,34 @@ dependencies {
     testImplementation("io.mockk:mockk:1.12.0")
     testImplementation("uk.org.webcompere:system-stubs-core:1.2.0")
     testImplementation("uk.org.webcompere:system-stubs-jupiter:1.2.0")
+    testImplementation("org.testcontainers:testcontainers:1.16.2")
     // Security
     implementation("io.jsonwebtoken:jjwt:0.9.1")
+}
+
+
+val startDynamoDb = task<Exec>("startDynamoDB") {
+    commandLine("bash", "-c", "docker run -p 8000:8000 -d tray/dynamodb-local -inMemory -sharedDb -port 8000")
+}
+
+
+val createUserDynamoDBTable = task<Exec>("createUserDynamoDBTable") {
+    mustRunAfter(startDynamoDb)
+    commandLine("bash", "-c", "aws dynamodb create-table --endpoint-url http://localhost:8000 --table-name user --attribute-definitions AttributeName=username,AttributeType=S --key-schema AttributeName=username,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5")
+}
+
+val createUrlDynamoDBTable = task<Exec>("createUrlDynamoDBTable") {
+    mustRunAfter(startDynamoDb)
+    commandLine("bash", "-c", "aws dynamodb create-table --endpoint-url http://localhost:8000 --table-name url --attribute-definitions AttributeName=short_url,AttributeType=S --key-schema AttributeName=short_url,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5")
+}
+
+val createRedirectHistoryDynamoDBTable = task<Exec>("createRedirectHistoryDynamoDBTable") {
+    mustRunAfter(startDynamoDb)
+    commandLine("bash", "-c", "aws dynamodb create-table --endpoint-url http://localhost:8000 --table-name redirect_history --attribute-definitions AttributeName=id,AttributeType=S --key-schema AttributeName=id,KeyType=HASH --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1")
+}
+
+val stopDynamoDB = task<Exec>("stopDynamoDB") {
+    commandLine("bash", "-c", "id=\$(docker ps | grep \"tray/dynamodb-local\" | awk '{print \$1}');if [[ \${id} ]]; then docker rm \$id --force; fi")
 }
 
 tasks.withType<KotlinCompile> {
@@ -67,7 +93,12 @@ tasks.withType<Test> {
 }
 
 tasks.test {
+    dependsOn(startDynamoDb)
+    dependsOn(createUserDynamoDBTable)
+    dependsOn(createUrlDynamoDBTable)
+    dependsOn(createRedirectHistoryDynamoDBTable)
     finalizedBy(tasks.jacocoTestReport)
+    finalizedBy(stopDynamoDB)
 }
 
 tasks.jacocoTestReport {

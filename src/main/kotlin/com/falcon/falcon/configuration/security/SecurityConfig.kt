@@ -29,6 +29,7 @@ class SecurityConfig(
         http.authorizeRequests()
             .antMatchers(HttpMethod.POST, "/api/auth/**", "/api/user").permitAll()
             .antMatchers(HttpMethod.GET, "/*").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/ping").permitAll()
             .anyRequest().authenticated()
 
         http.addFilterBefore(trialUserFilter, UsernamePasswordAuthenticationFilter::class.java)

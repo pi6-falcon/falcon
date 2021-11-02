@@ -1,0 +1,7 @@
+api:
+  jwt:
+    secret: any
+  aws:
+    access_key_id: any
+    secret_key: any
+    endpoint: http://localhost:8000
