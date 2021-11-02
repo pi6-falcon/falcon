@@ -65,19 +65,16 @@ val startDynamoDb = task<Exec>("startDynamoDB") {
 val createUserDynamoDBTable = task<Exec>("createUserDynamoDBTable") {
     mustRunAfter(startDynamoDb)
     commandLine("bash", "-c", "aws dynamodb create-table --endpoint-url http://localhost:8000 --table-name user --attribute-definitions AttributeName=username,AttributeType=S --key-schema AttributeName=username,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5")
-    setIgnoreExitValue(true)
 }
 
 val createUrlDynamoDBTable = task<Exec>("createUrlDynamoDBTable") {
     mustRunAfter(startDynamoDb)
     commandLine("bash", "-c", "aws dynamodb create-table --endpoint-url http://localhost:8000 --table-name url --attribute-definitions AttributeName=short_url,AttributeType=S --key-schema AttributeName=short_url,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5")
-    setIgnoreExitValue(true)
 }
 
 val createRedirectHistoryDynamoDBTable = task<Exec>("createRedirectHistoryDynamoDBTable") {
     mustRunAfter(startDynamoDb)
     commandLine("bash", "-c", "aws dynamodb create-table --endpoint-url http://localhost:8000 --table-name redirect_history --attribute-definitions AttributeName=id,AttributeType=S --key-schema AttributeName=id,KeyType=HASH --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1")
-    setIgnoreExitValue(true)
 }
 
 val stopDynamoDB = task<Exec>("stopDynamoDB") {
