@@ -39,6 +39,8 @@ class UrlDataProviderImpl(private val repository: UrlRepository) : UrlDataProvid
     override fun getAllUrlsByUserIdentifier(userIdentifier: String): List<Url> {
         return repository.findAllByUserIdentifier(userIdentifier).map { it.toCoreEntity() }
     }
+
+
 }
 
 private fun Url.toDatabaseEntity(): UrlEntity =

@@ -24,11 +24,15 @@ class UrlRedirectHistoryImpl(private val repository: UrlRedirectHistoryRepositor
 private fun UrlRedirectHistoryEntity.toCoreEntity(): UrlRedirectHistory = UrlRedirectHistory(
     shortUrl = this.shortUrl,
     from = this.from,
+    city = this.city,
+    country = this.country,
     date = LocalDateTime.parse(this.date)
 )
 
 private fun UrlRedirectHistory.toDatabaseEntity(): UrlRedirectHistoryEntity = UrlRedirectHistoryEntity(
     shortUrl = this.shortUrl,
     from = this.from,
+    city = this.city,
+    country = this.country,
     date = date.toString()
 )

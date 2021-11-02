@@ -11,6 +11,10 @@ data class UrlRedirectHistoryEntity(
     var id: UUID = UUID.randomUUID(),
     @DynamoDBAttribute(attributeName = "short_url")
     var shortUrl: String = "",
+    @DynamoDBAttribute(attributeName = "city")
+    var city: String = "",
+    @DynamoDBAttribute(attributeName = "country")
+    var country: String = "",
     @DynamoDBAttribute(attributeName = "from")
     var from: String = "",
     @DynamoDBAttribute(attributeName = "date")

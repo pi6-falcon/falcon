@@ -29,23 +29,25 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-security")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign:3.0.4")
     // Cache
-    implementation("com.github.ben-manes.caffeine:caffeine:3.0.3")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.0.4")
     // Utils + Kotlin
     implementation("io.github.microutils:kotlin-logging:2.0.11")
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.21")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.5")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
     implementation("commons-validator:commons-validator:1.7")
-    implementation("org.springframework.cloud:spring-cloud-starter-sleuth:3.0.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
+    implementation("org.springframework.cloud:spring-cloud-starter-sleuth:3.0.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt")
+    implementation("io.github.openfeign:feign-httpclient:11.5")
     // Storage
     implementation("com.github.derjust:spring-data-dynamodb:5.1.0")
     // Swagger
     implementation("org.springdoc:springdoc-openapi-ui:1.5.10")
     // Test
-    testImplementation("io.kotest:kotest-assertions-core:4.6.1")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
+    testImplementation("io.kotest:kotest-assertions-core:4.6.3")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation("io.mockk:mockk:1.12.0")
     testImplementation("uk.org.webcompere:system-stubs-core:1.2.0")
     testImplementation("uk.org.webcompere:system-stubs-jupiter:1.2.0")
