@@ -25,6 +25,8 @@ jobs:
           aws-region: us-east-2
       - name: Setup local DynamoDB
         run: docker run -p 8000:8000 amazon/dynamodb-local &
+      - name: Installing dependencies
+        run: npm install
       - name: Waiting for dynamo to boot up
         run: node ./wait-for-dynamo.js
       - name: Creating user table
