@@ -59,3 +59,4 @@ out/
 report/
 reports/
 target/
+node_modules*

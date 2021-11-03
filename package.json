@@ -1,0 +1,10 @@
+{
+  "name": "falcon",
+  "version": "1.0.0",
+  "devDependencies": {
+    "aws-sdk": "^2.1021.0"
+  },
+  "dependencies": {
+    "timers": "^0.1.1"
+  }
+}
