@@ -26,15 +26,15 @@ jobs:
       - name: Installing dependencies
         run: npm install
       - name: Setup local DynamoDB
-        run: docker run -p 8000:8000 amazon/dynamodb-local &
+        run: docker run -p 8000:8000 amazon/dynamodb-local --name dynamodblocal &
       - name: Waiting for dynamo to boot up
         run: node ./wait-for-dynamo.js
       - name: Creating user table
-        run: aws dynamodb create-table --endpoint-url http://localhost:8000 --table-name user --attribute-definitions AttributeName=username,AttributeType=S --key-schema AttributeName=username,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
+        run: aws dynamodb create-table --endpoint-url http://dynamodblocal:8000 --table-name user --attribute-definitions AttributeName=username,AttributeType=S --key-schema AttributeName=username,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
       - name: Creating url table
-        run: aws dynamodb create-table --endpoint-url http://localhost:8000 --table-name url --attribute-definitions AttributeName=short_url,AttributeType=S --key-schema AttributeName=short_url,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
+        run: aws dynamodb create-table --endpoint-url http://dynamodblocal:8000 --table-name url --attribute-definitions AttributeName=short_url,AttributeType=S --key-schema AttributeName=short_url,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
       - name: Creating redirect_history table
-        run: aws dynamodb create-table --endpoint-url http://localhost:8000 --table-name redirect_history --attribute-definitions AttributeName=id,AttributeType=S --key-schema AttributeName=id,KeyType=HASH --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1
+        run: aws dynamodb create-table --endpoint-url http://dynamodblocal:8000 --table-name redirect_history --attribute-definitions AttributeName=id,AttributeType=S --key-schema AttributeName=id,KeyType=HASH --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1
       - name: Set up JDK 11
         uses: actions/setup-java@v2
         with:
