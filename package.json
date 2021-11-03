@@ -1,6 +1,7 @@
 {
   "name": "falcon",
   "version": "1.0.0",
+  "type": "module",
   "devDependencies": {
     "aws-sdk": "^2.1021.0"
   },
