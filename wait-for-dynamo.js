@@ -7,9 +7,8 @@ const waitForDynamoDbToStart = async () => {
     try {
         await dynamodb.listTables().promise()
     } catch (error) {
-        console.log(error)
         console.log('Waiting for DynamoDB container to start...')
-        await timers.setTimeout(10000)
+        await timers.setTimeout(1000)
         return waitForDynamoDbToStart()
     }
 }
