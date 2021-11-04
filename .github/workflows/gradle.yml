@@ -20,7 +20,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: us-east-2
       - name: Setup local DynamoDB
-        run: docker run -p 8000:8000 amazon/dynamodb-local &
+        run: docker run -p 8000:8000 -d tray/dynamodb-local -inMemory -sharedDb -port 8000
       - name: Waiting for DynamoDB to get boot up
         uses: whatnick/wait-action@master
         with:
