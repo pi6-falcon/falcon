@@ -21,16 +21,20 @@ jobs:
           aws-region: us-east-2
       - name: Setup local DynamoDB
         run: docker run -p 8000:8000 amazon/dynamodb-local &
-      - name: Sleep for 30 seconds
+      - name: Waiting for DynamoDB to get boot up
         uses: whatnick/wait-action@master
         with:
-          time: '10s'
+          time: '30s'
       - name: Create user table
         run: aws dynamodb create-table --table-name user --attribute-definitions AttributeName=username,AttributeType=S --key-schema AttributeName=username,KeyType=HASH --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1 --endpoint-url http://localhost:8000
       - name: Create user table
         run: aws dynamodb create-table --table-name url --attribute-definitions AttributeName=short_url,AttributeType=S --key-schema AttributeName=short_url,KeyType=HASH --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1 --endpoint-url http://localhost:8000
       - name: Create user table
         run: aws dynamodb create-table --table-name redirect_history --attribute-definitions AttributeName=id,AttributeType=S --key-schema AttributeName=id,KeyType=HASH --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1 --endpoint-url http://localhost:8000
+      - name: Waiting for DynamoDB to create table
+        uses: whatnick/wait-action@master
+        with:
+          time: '30s'
       - name: Set up JDK 11
         uses: actions/setup-java@v2
         with:
@@ -51,7 +55,7 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Run tests
-        run: ./gradlew test --args='--spring.profiles.active=test'
+        run: ./gradlew test
       - name: Sonar Cloud Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
