@@ -48,9 +48,9 @@ class SecurityConfig(
     fun corsConfigurationSource(): CorsConfigurationSource? {
         val configuration = CorsConfiguration()
             .apply { allowedOrigins = listOf("*") }
-            .apply { allowedMethods = listOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS") }
-            .apply { allowedHeaders = listOf("authorization", "content-type", "x-auth-token") }
-            .apply { exposedHeaders = listOf("x-auth-token") }
+            .apply { allowedMethods = listOf("*") }
+            .apply { allowedHeaders = listOf("*") }
+            .apply { exposedHeaders = listOf("*") }
 
         return UrlBasedCorsConfigurationSource()
             .apply { registerCorsConfiguration("/**", configuration) }
