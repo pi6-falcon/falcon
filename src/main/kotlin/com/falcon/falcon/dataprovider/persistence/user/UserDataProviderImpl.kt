@@ -1,14 +1,15 @@
 package com.falcon.falcon.dataprovider.persistence.user
 
 import com.falcon.falcon.core.entity.User
-import java.time.Instant
 import org.springframework.stereotype.Service
+import java.time.Instant
 
 interface UserDataProvider {
 
     fun save(request: User): User
     fun findByUsername(username: String): User?
     fun isUserAlreadyCreated(request: User): Boolean
+    fun delete(request: User): Unit
 }
 
 @Service
@@ -21,6 +22,11 @@ class UserDataProviderImpl(private val repository: UserRepository) : UserDataPro
 
     override fun isUserAlreadyCreated(request: User): Boolean =
         repository.existsById(request.username)
+
+
+    override fun delete(request: User) {
+        repository.delete(request.toDatabaseEntity())
+    }
 }
 
 private fun User.toDatabaseEntity(): UserEntity =
