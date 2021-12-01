@@ -4,6 +4,8 @@ import com.falcon.falcon.CreationUtils
 import com.falcon.falcon.core.entity.User
 import com.falcon.falcon.core.enumeration.UserType
 import com.falcon.falcon.core.usecase.user.CreateUserUseCase
+import com.falcon.falcon.core.usecase.user.DeleteUserUseCase
+import com.falcon.falcon.core.usecase.user.UpdateUserPasswordUseCase
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeTypeOf
@@ -22,7 +24,9 @@ import org.springframework.http.ResponseEntity
 class UserControllerTest {
 
     private val createUser: CreateUserUseCase = mockk()
-    private val userController: UserController = UserController(createUser)
+    private val updateUserUseCase: UpdateUserPasswordUseCase = mockk();
+    private val deleteUserUseCase: DeleteUserUseCase = mockk();
+    private val userController: UserController = UserController(createUser, updateUserUseCase, deleteUserUseCase)
 
     @BeforeEach
     fun init() {
