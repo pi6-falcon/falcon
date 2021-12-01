@@ -5,7 +5,7 @@ import java.time.Instant
 
 data class User(
     val username: String,
-    val password: String,
+    var password: String,
     val type: UserType = UserType.PERMANENT,
     val expirationDate: Instant? = null
 )

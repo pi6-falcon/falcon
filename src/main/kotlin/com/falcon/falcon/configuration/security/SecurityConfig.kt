@@ -32,6 +32,7 @@ class SecurityConfig(
             .and()
         http.authorizeRequests()
             .antMatchers(HttpMethod.POST, "/api/auth/**", "/api/user").permitAll()
+            .antMatchers(HttpMethod.PUT, "/api/user/*").permitAll()
             .antMatchers(HttpMethod.GET, "/*").permitAll()
             .antMatchers(HttpMethod.GET, "/api/ping").permitAll()
             .anyRequest().authenticated()
